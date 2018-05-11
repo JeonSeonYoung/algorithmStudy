@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <script>
+
+        var MyArray = function (pSize) {
+            if (!(this instanceof MyArray)) {
+                return new MyArray(pSize);
+            }
+
+            if (pSize && isNaN(Number(pSize))) {
+                throw Error("배열 크기는 오로지 숫자만 가능합니다.");
+                return false;
+            }
+
+            //this.dataStore = {
+            //    array : new Array(pSize),
+            //    count : 0
+            //}
+            
+            this.array = new Array(pSize);
+            this.count= 0;
+            this.size = pSize;
+
+            //this.init= function () {
+            //    array = new Array(pSize),
+            //    count = 0
+            //};
+        }
+
+        
+        MyArray.prototype.get = function (pIdx) {
+            if (pIdx <= this.count) {
+                return privateMember.getData[pIdx];
+            } else {
+                throw Error("해당하는 데이터를 찾을 수 없습니다.");
+            }
+        }
+
+        MyArray.prototype.appenAdd = function (pData) {
+            this.array[this.count++] = pData;
+        }
+
+
+        var arrayTest = new MyArray(5);
+        arrayTest.appenAdd("데이터_0");
+        arrayTest.appenAdd("데이터_1");
+        console.log(arrayTest);
+
+        var arrayTest2 = new MyArray(5);
+        arrayTest2.appenAdd("데이터_00");
+        arrayTest2.appenAdd("데이터_11");
+        console.log(arrayTest2);
+    </script>
+</body>
+</html>
