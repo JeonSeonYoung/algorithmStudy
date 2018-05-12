@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>배열study 1일차</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    //var myArray = new Array();
+    var myArray = ['0번','1번','2번','3번','4','NO!!!'];
+    
+
+    $(document).ready(function(){
+        fun.init();
+    });
+</script>
+
+<body>
+    <div id='app'>
+        <table>
+            <tr>
+                <td>
+                    <input type = "text" id = "inputdata"/>
+                    <button id = "add" onClick="javascript:add($('#inputdata').val());">add</button>
+                    <button id = "remove" onClick="javascript:remove($('#inputdata').val());">remove</button>
+                    <button id = "clear" onClick="javascript:clean();">clear</button>
+                    <button id = "size" onClick="javascript:size();">size</button>
+                </td>
+                <td>
+                    <input type = "text" id = "inputdata2"/>
+                    <button id = "find" onClick="javascript:find($('#inputdata2').val());">find</button>
+                    <button id = "get" onClick="javascript:get($('#inputdata2').val());">get</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    배열 : <span id = "arr"></span>
+                </td>
+                <td>
+                    <span id = "arr2"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    현재배열의 크기는 <span id = "arrlength"></span>입니다.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" id="swap1">
+                    <input type="text" id="swap2">
+                    <button id = "add_index" onClick="javascript:add_index($('#swap1').val(),$('#swap2').val());">add_index</button>
+                    <button id = "set" onClick="javascript:set($('#swap1').val(),$('#swap2').val());">set</button>
+                    <button id = "swap" onClick="javascript:swap($('#swap1').val(),$('#swap2').val());">swap</button>
+                </td>
+            </tr>
+        </table>
+    </div>    
+</body>
+</html>
+
+<script>
+
+    var fun = {
+        init : function(){
+            console.log('init');
+            $("#arr").text(myArray);
+            $("#arrlength").text(myArray.length);
+        }
+    }
+
+    var add = function(data){        
+        console.log('add');
+        myArray.push(data);
+        $("#arr").text(myArray);
+        size();
+    }
+
+    var add_index = function(index, data){
+        console.log('add_index');
+        myArray.splice(index,0,data);
+        $("#arr").text(myArray);
+        size();
+    }
+
+    var remove = function(index){
+        console.log('remove');
+        myArray.splice(index,1);
+        $("#arr").text(myArray);
+        size();
+    }
+
+    var clean = function(){
+        console.log('clear');
+        myArray = [];
+        $("#arr").text(myArray);
+        size();
+    }
+
+    var size = function(){
+        console.log('size');
+        $("#arrlength").text(myArray.length);
+    }
+
+    var find = function(data){
+        console.log('find');
+        //alert(myArray.indexOf(data));
+        if(myArray.indexOf(data) < 0){
+            $("#arr2").text('find : 요청하신 값을 찾을수 없습니다.');
+        }else{
+            $("#arr2").text('find : ' + myArray.indexOf(data));
+        }
+        
+    }
+
+    var get = function(index){
+        //console.log('get : 현재 index : ' + index + ', 값은 "'+ myArray[index] +'"입니다.');
+        $("#arr2").text('get : ' + index + ' 번째의 값은 "'+ myArray[index] +'"입니다.');
+    }
+
+    var set = function(index, data){
+        console.log('set');
+        myArray[index] = data;
+        $("#arr").text(myArray);
+    }
+
+    var swap = function(index1, index2){
+        console.log('swap');
+        var temp = myArray[index1];
+        myArray[index1] = myArray[index2];
+        myArray[index2] = temp;
+        $("#arr").text(myArray);
+    }
+
+</script>
