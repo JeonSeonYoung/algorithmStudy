@@ -4,7 +4,7 @@
 
 void main()
 {
-	//½ºÅÃ ¸Ş¸ğ¸®¿Í Èü ¸Ş¸ğ¸®Áß ÈüÀÌ ´õ ºü¸£´Ù
+	//ìŠ¤íƒ ë©”ëª¨ë¦¬ì™€ í™ ë©”ëª¨ë¦¬ì¤‘ í™ì´ ë” ë¹ ë¥´ë‹¤
 
 	//stack memory
 	CTmpArr <int> m_arr_1(3);	
@@ -15,7 +15,7 @@ void main()
 	cout << m_arr_1.Size() << endl;
 
 	//heap memory
-	CTmpArr <int> *m_pArr = new CTmpArr <int>(2);//ÇÒ´ç
+	CTmpArr <int> *m_pArr = new CTmpArr <int>(2);//í• ë‹¹
 
 //	m_pArr->SetData(1, 100);
 //	cout << m_pArr->GetData(1) << endl;
@@ -33,5 +33,5 @@ void main()
 	for (int i = 0; i < m_pArr->Size(); ++i)
 		cout << m_pArr->GetData(i) << endl;
 
-	delete m_pArr;//ÇØÁ¦
+	delete m_pArr;//í•´ì œ
 }

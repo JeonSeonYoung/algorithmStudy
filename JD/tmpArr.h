@@ -8,7 +8,6 @@ private:
 	bool* m_pAdded;
 	int m_iCount;
 
-
 public:
 	CTmpArr(void):m_pData(NULL), m_pAdded(NULL), m_iCount(0){}
 	~CTmpArr(void) {
@@ -24,7 +23,7 @@ public:
 	}
 
 	///<summary>
-	//���� �˻� �Ͽ� ����� �����͸� Setting ����� ������ ������ �ø���
+	//순차 검색 하여 빈곳에 데이터를 Setting 빈곳이 없으면 공간을 늘린다
 	///</summary>
 	void Add(T _data)
 	{
@@ -56,7 +55,7 @@ public:
 		m_pAdded[m_iCount - 1] = true;
 	}
 	///<summary>
-	//�ش� �ε����� �Ҵ�� ������ �ƴϸ� ������ �ø���(÷�� ���� �߰�) Index Ver.
+	//해당 인덱스가 할당된 공간이 아니면 공간을 늘린다(첨자 참조 추가) Index Ver.
 	///</summary>
 	void Add(T _data, int _idx)
 	{
@@ -91,7 +90,7 @@ public:
 	}
 
 	///<summary>
-	//������ ���� ������� �迭�� ũ��� �״��
+	//지워도 값만 사라질뿐 배열의 크기는 그대로
 	///</summary>
 	void Remove(int _idx)
 	{
@@ -100,7 +99,7 @@ public:
 	}
 
 	///<summary>
-	// �迭�� ������ Set
+	// 배열에 데이터 Set
 	///</summary>
 	void SetData(int _idx, T _data)
 	{
@@ -109,11 +108,11 @@ public:
 	}
 
 	///<summary>
-	// ������ Get
+	// 데이터 Get
 	///</summary>
 	T GetData(int _idx)
 	{
-		//��ǻ� ���߶������ ����ó��
+		//사실상 쓰잘때기없는 예외처리
 		/*if(!IsIn_Range(_idx))
 			return NULL;*/
 		if (!Is_Added(_idx))
@@ -121,22 +120,22 @@ public:
 
 		return *(m_pData + _idx);
 			
-		//������ ���ϱ� ����
+		//포인터 더하기 연산
 		//return *(m_pData + _idx);
 		
-		//���������� ���
+		//증감연산자 사용
 		/*T* pTmp = pHead;
 		for (int i = 0; i < _idx; ++i)
 		++pTmp;
 
 		return *pTmp;*/
 
-		//pHead�� ���̵� �����Ͷ�� �̷���
+		//pHead가 보이드 포인터라면 이렇게
 		/*return *(pHead + (sizeof(T)* _idx));*/
 	}
 
 	///<summary>
-	// ���� �ٲٱ�
+	// 서로 바꾸기
 	///</summary>
 	void Swap(int idx_1, int idx_2)
 	{
@@ -151,7 +150,7 @@ public:
 	}
 
 	///<summary>
-	// �迭 ũ�� ��ȯ
+	// 배열 크기 반환
 	///</summary>
 	int Size()
 	{
@@ -159,7 +158,7 @@ public:
 	}
 
 	///<summary>
-	// ������ �ִ��� �˻�
+	// 가지고 있는지 검사
 	///</summary>
 	int Find(T _data)
 	{
