@@ -65,5 +65,10 @@ public class PostFix {
         System.out.println(
                 new PostFix(1000).print("1*(2+3*4)+5")
         );
+        System.out.println(
+                new PostFix(1000).print("(2+5)*3*(2+1)")
+        );
+
+
     }
 }
