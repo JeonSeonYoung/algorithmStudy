@@ -1,11 +1,11 @@
 #include "StdAfx.h"
-#include "tmpStack.h"
+#include "tmpStack.hpp"
 
 
 void main()
 {
 	//heap memory
-	CTmpStack <int> *m_pStack = new CTmpStack <int>(10);//í• ë‹¹
+	CTmpStack <int> *m_pStack = new CTmpStack <int>(10);//ÇÒ´ç
 
 	int iSize = m_pStack->Size();
 
@@ -27,7 +27,7 @@ void main()
 	cout << m_pStack->IsEmpty() << endl;
 
 	cout << endl;
-	cout << "Stack ì›ì†Œ í™•ì¸ : //////////////////////////////" << endl;
+	cout << "Stack ¿ø¼Ò È®ÀÎ : //////////////////////////////" << endl;
 
 	for (int i = 0; i < iSize; ++i)
 	{
@@ -49,5 +49,56 @@ void main()
 	cout << "IsEmpty? : ";
 	cout << m_pStack->IsEmpty() << endl;
 
-	delete m_pStack;//í•´ì œ
+	delete m_pStack;//ÇØÁ¦
+
+	CTmpStack <char> *m_pStack_Mid = new CTmpStack <char>(20);//ÇÒ´ç
+	CTmpStack <char> *m_pStack_Back = new CTmpStack <char>(20);//ÇÒ´ç
+	CTmpStack <char> *m_pStack_Operator = new CTmpStack <char>(20);//ÇÒ´ç
+
+
+	m_pStack_Mid->Push('1');
+	m_pStack_Mid->Push('+');
+	m_pStack_Mid->Push('2');
+	m_pStack_Mid->Push('-');
+	m_pStack_Mid->Push('3');
+	m_pStack_Mid->Push('*');
+	m_pStack_Mid->Push('4');
+
+	int valueCnt = 0;
+	int operaterCnt = 0;
+
+	int max = m_pStack_Mid->Size();
+	for (int i = 0; i < max; ++i)
+	{
+		if (m_pStack_Mid->Peek() > 47 && m_pStack_Mid->Peek() < 58)
+		{
+			m_pStack_Back->Push(m_pStack_Mid->Peek());
+			++valueCnt;
+		}
+		else
+		{
+			m_pStack_Operator->Push(m_pStack_Mid->Peek());
+			++operaterCnt; 
+		}
+
+		if (valueCnt == 2 && operaterCnt == 1)
+		{
+			valueCnt = 1; operaterCnt = 0;
+			m_pStack_Back->Push(m_pStack_Operator->Peek());
+			m_pStack_Operator->Pop();
+		}
+
+		m_pStack_Mid->Pop();
+	}
+
+
+	int iAllSize = m_pStack_Back->Size();
+	
+	cout << "operater : //////////////////////////////" << endl;
+	for (int i = 0; i < iAllSize; ++i)
+			cout << m_pStack_Back->PeekPoint(i) << endl;
+		
+
+
+	
 }
