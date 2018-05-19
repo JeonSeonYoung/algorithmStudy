@@ -4,7 +4,7 @@ public class MyStack implements lStack {
 
     private Object[] data;
     private int top;
-    private static int maxSize;
+    private final int maxSize;
 
     public MyStack(int maxSize){
         this.data = new Object[maxSize];
@@ -78,6 +78,7 @@ public class MyStack implements lStack {
         return result;
     }
 
+    @Override
     public String toString(){
         StringBuffer sb = new StringBuffer("[");
         if(top>-1) {
