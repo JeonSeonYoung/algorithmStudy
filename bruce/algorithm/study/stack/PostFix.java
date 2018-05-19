@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 public class PostFix {
 
+    private String infixExpression;
     private Stack<String> operators;
     private List<String> postfixElements;
 
@@ -20,6 +21,7 @@ public class PostFix {
     public PostFix process(String infix) {
         operators.clear();
         postfixElements.clear();
+        infixExpression = infix;
 
         for (int i = 0; i < infix.length(); ) {
             int nextIdx = nextIdx(infix, i);
@@ -57,8 +59,9 @@ public class PostFix {
     }
 
     public PostFix print() {
+        System.out.println("infix :\t\t" + infixExpression);
         System.out.println(
-                postfixElements.stream().collect(Collectors.joining(" "))
+                "postfix :\t" +  postfixElements.stream().collect(Collectors.joining(" "))
         );
         return this;
     }
