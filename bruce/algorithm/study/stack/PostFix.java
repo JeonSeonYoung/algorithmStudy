@@ -1,72 +1,123 @@
 package algorithm.study.stack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PostFix {
 
-    private Stack<Character> stack;
+    private Stack<String> operators;
+    private List<String> postfixElements;
 
     public PostFix(int size) {
-        stack = new Stack<>(size);
+        operators = new Stack<>(size);
+        postfixElements = new ArrayList<>();
     }
 
-    public String print(String infix) {
-        stack.clear();
-        String postfix = "";
-        for (int i = 0; i < infix.length(); i++) {
-            char c = infix.charAt(i);
+    public PostFix process(String infix) {
+        operators.clear();
+        postfixElements.clear();
+
+        for (int i = 0; i < infix.length(); ) {
+            int nextIdx = nextIdx(infix, i);
+            String c = infix.substring(i, nextIdx);
+            i = nextIdx;
+
             if (isNum(c))
-                postfix += c;
+                postfixElements.add(c);
             else if (isFundamentalOperation(c)) {
                 while (!hasPrecedence(c))
-                    postfix += stack.pop();
-                stack.push(c);
-            } else if (c == ')')
-                postfix += extractOperandsBetween();
-            else if (c == '(')
-                stack.push(c);
+                    postfixElements.add(operators.pop());
+                operators.push(c);
+            } else if (c.equals(")"))
+                postfixElements.addAll(extractOperandsBetween());
+            else if (c.equals("("))
+                operators.push(c);
         }
 
-        while (!stack.isEmpty())
-            postfix += stack.pop();
+        while (!operators.isEmpty())
+            postfixElements.add(operators.pop());
 
-        return postfix;
+        return this;
     }
 
-    private String extractOperandsBetween() {
-        String operands = "";
-        while (!stack.peek().equals('('))
-            operands += stack.pop();
-        stack.pop(); // remove (
+    private int nextIdx(String infix, int i) {
+        String c = infix.substring(i, i + 1);
+        if (!isNum(c))
+            return Math.min(i + 1, infix.length());
+        while (isNum(c)) {
+            i++;
+            if (i >= infix.length() - 1) break;
+            c = infix.substring(i, i + 1);
+        }
+        return Math.min(i, infix.length());
+    }
+
+    public PostFix print() {
+        System.out.println(postfixElements);
+        return this;
+    }
+
+    public int compute() {
+        int result = 0;
+//        Stack<Character> operandCache = new Stack<>(size);
+//        char element = postfixElements.pop();
+//        if (isNum(element))
+//            operandCache.push(element);
+//        else { // operator
+//            if (element == '+') result += operandCache.pop() + operandCache.pop();
+//            if (element == '-') result += operandCache.pop() - operandCache.pop();
+//            if (element == '*') result += operandCache.pop() * operandCache.pop();
+//            if (element == '/') result += operandCache.pop() / operandCache.pop();
+//        }
+        return result;
+    }
+
+
+    private List<String> extractOperandsBetween() {
+        List<String> operands = new ArrayList<>();
+        while (!operators.peek().equals("("))
+            operands.add(operators.pop());
+        operators.pop(); // remove (
         return operands;
     }
 
-    private boolean isFundamentalOperation(char c) {
-        return c == '+' || c == '-' || c == '*' || c == '/';
+    private boolean isFundamentalOperation(String c) {
+        return c.equals("+") ||
+                c.equals("-") ||
+                c.equals("*") ||
+                c.equals("/");
     }
 
-    private boolean hasPrecedence(char c) {
-        if (stack.isEmpty()) return true;
-        char operator = stack.peek();
+    private boolean hasPrecedence(String c) {
+        if (operators.isEmpty()) return true;
+        String operator = operators.peek();
         if (!isFundamentalOperation(operator)) return true;
-        return (operator == '+' || operator == '-') && (c == '*' || c == '/');
+        return (operator.equals("+") || operator.equals("-"))
+                && (c.equals("*") || c.equals("/"));
     }
 
-    private boolean isNum(char c) {
-        return c >= '0' && c <= '9';
+    private boolean isNum(String c) {
+        try {
+            int i = Integer.parseInt(c);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
 
     // test client
     public static void main(String[] args) {
         System.out.println(
-                new PostFix(1000).print("1*2+3")
+                new PostFix(1000).process("11*222+3").print().compute()
         );
         System.out.println(
-                new PostFix(1000).print("1*(2+3)")
+                new PostFix(1000).process("1*(2+3)").print().compute()
         );
         System.out.println(
-                new PostFix(1000).print("1*(2+3*4)+5")
+                new PostFix(1000).process("1*(22+3*4)+5").print().compute()
         );
         System.out.println(
-                new PostFix(1000).print("(2+5)*3*(2+1)")
+                new PostFix(1000).process("(2+51)*3*(2+1)").print().compute()
         );
 
 
