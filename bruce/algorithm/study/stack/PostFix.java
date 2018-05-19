@@ -2,13 +2,18 @@ package algorithm.study.stack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class PostFix {
 
     private Stack<String> operators;
     private List<String> postfixElements;
 
+    private int size;
+
     public PostFix(int size) {
+        this.size = size;
         operators = new Stack<>(size);
         postfixElements = new ArrayList<>();
     }
@@ -53,23 +58,29 @@ public class PostFix {
     }
 
     public PostFix print() {
-        System.out.println(postfixElements);
+        System.out.println(
+                postfixElements.stream().collect(Collectors.joining(" "))
+        );
         return this;
     }
 
-    public int compute() {
-        int result = 0;
-//        Stack<Character> operandCache = new Stack<>(size);
-//        char element = postfixElements.pop();
-//        if (isNum(element))
-//            operandCache.push(element);
-//        else { // operator
-//            if (element == '+') result += operandCache.pop() + operandCache.pop();
-//            if (element == '-') result += operandCache.pop() - operandCache.pop();
-//            if (element == '*') result += operandCache.pop() * operandCache.pop();
-//            if (element == '/') result += operandCache.pop() / operandCache.pop();
-//        }
-        return result;
+    public String compute() {
+        Stack<String> operandCache = new Stack<>(size);
+        for (String element : postfixElements) {
+            if (isNum(element))
+                operandCache.push(element);
+            else { // operator
+                double rhs = Double.parseDouble(operandCache.pop());
+                double lhs = Double.parseDouble(operandCache.pop());
+                Double tempResult = null;
+                if (element.equals("+")) tempResult = lhs + rhs;
+                if (element.equals("-")) tempResult = lhs - rhs;
+                if (element.equals("*")) tempResult = lhs * rhs;
+                if (element.equals("/")) tempResult = lhs / rhs;
+                operandCache.push(tempResult.toString());
+            }
+        }
+        return operandCache.pop();
     }
 
 
@@ -119,7 +130,8 @@ public class PostFix {
         System.out.println(
                 new PostFix(1000).process("(2+51)*3*(2+1)").print().compute()
         );
-
-
+        System.out.println(
+                new PostFix(1000).process("(2-51)/3-(2+1*12)").print().compute()
+        );
     }
 }
