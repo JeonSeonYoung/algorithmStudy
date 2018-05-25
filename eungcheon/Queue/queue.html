@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>study - Queue</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+        $(document).ready(function(){
+            fun.isEmpty();
+            fun.init(5);
+            fun.insert();
+            fun.peek();
+            fun.isEmpty();
+            fun.isFull();
+        });
+
+        var data = {
+            maxSize : 0,
+            front : -1,
+            rear : -1,
+            queue : []
+        }
+
+        var fun = {
+            init : function(maxSize){
+                data.maxSize = maxSize;
+                data.queue = new Array(5);
+                data.queue[++data.rear] = 5;
+                console.log('큐 상태 : ' + data.queue);
+                console.log('rear : ' + data.rear);
+            },
+            insert : function(){
+                //maxsize 체크후 추가
+                data.queue[++data.rear] = 9;
+                data.queue[++data.rear] = 9;
+                data.queue[++data.rear] = 3;
+                data.queue[++data.rear] = 9;
+                console.log('큐 상태 : ' + data.queue);
+            },
+            isEmpty : function(){
+                //front, rear 값이 값으면 empty
+                if(data.front == data.rear){
+                    console.log('큐는 배고파요...');
+                }else{
+                    console.log('큐는 배가 불러와요');
+                }
+            },
+            isFull : function(){
+                if(data.rear == data.queue.length-1){
+                    console.log('큐 배가 터져요!!!');
+                }else{
+                    console.log('큐는 조금 더 먹을수 있어요~');
+                }
+                
+                //return (rear==queueSize-1);
+            },
+            peek : function(){
+                console.log('peek : ' + data.queue[data.front]);
+            },
+            remove : function(){
+    
+            }
+            
+        }
+    </script>
+<body>
+
+</body>
+</html>
