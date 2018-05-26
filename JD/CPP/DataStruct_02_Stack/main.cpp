@@ -1,11 +1,21 @@
 #include "StdAfx.h"
 #include "tmpStack.hpp"
-
+#include "tmpQueue.hpp"
+#include "tmpQueue_Circle.hpp.hpp"
 
 void main()
 {
+	
+		
+
+
+	
+}
+
+void StackSample()
+{
 	//heap memory
-	CTmpStack <int> *m_pStack = new CTmpStack <int>(10);//ÇÒ´ç
+	CTmpStack <int> *m_pStack = new CTmpStack <int>(10);//í• ë‹¹
 
 	int iSize = m_pStack->Size();
 
@@ -27,7 +37,7 @@ void main()
 	cout << m_pStack->IsEmpty() << endl;
 
 	cout << endl;
-	cout << "Stack ¿ø¼Ò È®ÀÎ : //////////////////////////////" << endl;
+	cout << "Stack ì›ì†Œ í™•ì¸ : //////////////////////////////" << endl;
 
 	for (int i = 0; i < iSize; ++i)
 	{
@@ -49,11 +59,11 @@ void main()
 	cout << "IsEmpty? : ";
 	cout << m_pStack->IsEmpty() << endl;
 
-	delete m_pStack;//ÇØÁ¦
+	delete m_pStack;//í•´ì œ
 
-	CTmpStack <char> *m_pStack_Mid = new CTmpStack <char>(20);//ÇÒ´ç
-	CTmpStack <char> *m_pStack_Back = new CTmpStack <char>(20);//ÇÒ´ç
-	CTmpStack <char> *m_pStack_Operator = new CTmpStack <char>(20);//ÇÒ´ç
+	CTmpStack <char> *m_pStack_Mid = new CTmpStack <char>(20);//í• ë‹¹
+	CTmpStack <char> *m_pStack_Back = new CTmpStack <char>(20);//í• ë‹¹
+	CTmpStack <char> *m_pStack_Operator = new CTmpStack <char>(20);//í• ë‹¹
 
 
 	m_pStack_Mid->Push('1');
@@ -78,7 +88,7 @@ void main()
 		else
 		{
 			m_pStack_Operator->Push(m_pStack_Mid->Peek());
-			++operaterCnt; 
+			++operaterCnt;
 		}
 
 		if (valueCnt == 2 && operaterCnt == 1)
@@ -93,12 +103,8 @@ void main()
 
 
 	int iAllSize = m_pStack_Back->Size();
-	
+
 	cout << "operater : //////////////////////////////" << endl;
 	for (int i = 0; i < iAllSize; ++i)
-			cout << m_pStack_Back->PeekPoint(i) << endl;
-		
-
-
-	
+		cout << m_pStack_Back->PeekPoint(i) << endl;
 }
