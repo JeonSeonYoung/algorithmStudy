@@ -6,8 +6,8 @@ class CTmpQueue
 private:
 	T * * m_pData;
 	int m_iSize;
-	int m_iHead;//¸Ó¸®
-	int m_iTail;//²¿¸®
+	int m_iHead;//ë¨¸ë¦¬
+	int m_iTail;//ê¼¬ë¦¬
 
 public:
 	CTmpQueue(void) :m_pData(NULL), m_iSize(0), m_iHead(0), m_iTail(0) {}

@@ -6,8 +6,8 @@ class CTmpQueue_Circle
 private:
 	T * * m_pData;
 	int m_iSize;
-	int m_iHead;//¸Ó¸®
-	int m_iTail;//²¿¸®
+	int m_iHead;//ë¨¸ë¦¬
+	int m_iTail;//ê¼¬ë¦¬
 
 public:
 	CTmpQueue_Circle(void) :m_pData(NULL), m_iSize(0), m_iHead(0), m_iTail(0) {}
@@ -25,7 +25,7 @@ public:
 
 	void EnQueue(T _data)
 	{
-		if (m_pData[m_iHead] != NULL)//Å¥°¡ ºñ¾îÀÖ´ÂÁö °Ë»ç
+		if (m_pData[m_iHead] != NULL)//íê°€ ë¹„ì–´ìˆëŠ”ì§€ ê²€ì‚¬
 			return;
 
 		T* data = new T;
