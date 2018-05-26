@@ -1,5 +1,6 @@
 package algorithm.study.queue;
 
+import java.util.Deque;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -109,7 +110,10 @@ public class CircularQueue<T> implements Queue<T> {
         queue.print();
         queue.dequeue();
         queue.print();
+        System.out.println(queue.dequeue());
+        queue.print();
 
+        queue.enqueue(6);
         queue.clear();
         queue.print();
 
