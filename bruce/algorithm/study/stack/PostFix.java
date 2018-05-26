@@ -35,7 +35,7 @@ public class PostFix {
                     postfixElements.add(operators.pop());
                 operators.push(c);
             } else if (c.equals(")"))
-                postfixElements.addAll(extractOperandsBetween());
+                postfixElements.addAll(extractOperatorsBetween());
             else if (c.equals("("))
                 operators.push(c);
         }
@@ -86,7 +86,7 @@ public class PostFix {
     }
 
 
-    private List<String> extractOperandsBetween() {
+    private List<String> extractOperatorsBetween() {
         List<String> operands = new ArrayList<>();
         while (!operators.peek().equals("("))
             operands.add(operators.pop());
