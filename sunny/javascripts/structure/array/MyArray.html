@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <script>
+
+        var MyArray = function (pSize) {
+            // 강제 new 패턴
+            if (!(this instanceof MyArray)) {
+                return new MyArray(pSize);
+            }
+
+            // 사이즈는 오로지 숫자만
+            if (pSize && isNaN(Number(pSize))) {
+                throw Error("배열 크기는 오로지 숫자만 가능합니다.");
+                return false;
+            }
+            
+            this.array = new Array(pSize);
+            this.count= 0;
+            this.size = pSize;
+
+        }
+
+
+        // 데이터 가져오기
+        MyArray.prototype.get = function (pIdx) {
+            if (pIdx <= this.count) {
+                return this.array[pIdx];
+            } else {
+                throw Error("해당하는 데이터를 찾을 수 없습니다.");
+            }
+        };
+
+        // 바로 뒤에 등록
+        MyArray.prototype.appenAdd = function (pData) {
+            if (this.count < this.size) {
+                this.array[this.count++] = pData;
+            } else {
+                throw Error("더 이상 등록 할 수 없습니다.");
+            }
+        };
+
+        // 해당하는 index에 데이터 등록
+        MyArray.prototype.add = function (pIdx, pData) {
+            if (this.count < this.size) {
+                for (var i = this.count, len = pIdx; i > len; --i) {
+                    this.array[i] = this.array[i-1];
+                }
+                this.array[pIdx] = pData;
+                this.count++;
+            } else {
+                throw Error("더 이상 등록 할 수 없습니다.");
+            }
+        };
+
+        // 데이터 제거하기
+        MyArray.prototype.remove = function (pIdx) {
+            if (this.count > 0) {
+                for (var i = pIdx, len = this.count-1; i < len; ++i) {
+                    this.array[i] = this.array[i + 1];
+                }
+                this.array[this.count-1] = null;
+                this.count--;
+            }
+        };
+
+        // 사이즈 가져오기
+        MyArray.prototype.size = function () {
+            return this.count;
+        };
+
+        // 전체 클리어
+        MyArray.prototype.clear = function () {
+            this.array = new Array(pSize);
+            this.count = 0;
+        };
+
+        // 해당 index 값 변경
+        MyArray.prototype.replace = function (pIdx, pData) {
+            if (!!this.array[pIdx]) {
+                return this.array[pIdx] = pData;
+            } else {
+                throw Error("해당하는 인덱스가 없습니다.");
+            }
+            
+        };
+
+        // 서로 값 바꾸기
+        MyArray.prototype.swap = function (preIdx, lastIdx) {
+            var temp = this.array[preIdx];
+            this.array[preIdx] = this.array[lastIdx];
+            this.array[lastIdx] = temp;
+        };
+
+        // 찾기
+        MyArray.prototype.find = function (pData) {
+            for (var i = 0, len = this.count; i<len; ++i){
+                if (this.array[i] == pData) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        var arrayTest = new MyArray(5);
+        //arrayTest.appenAdd("데이터_0");
+        //arrayTest.appenAdd("데이터_1");
+        //console.log("데이터 두개 등록:::",arrayTest);
+        //console.log("0번째 인덱스 구하기:::",arrayTest.get(0));
+        //arrayTest.appenAdd("데이터_2");
+        //arrayTest.appenAdd("데이터_3");
+        //arrayTest.appenAdd("데이터_4");
+        //console.log("데이터 다 등록해보기::::",arrayTest);
+        ////arrayTest.appenAdd("데이터_5");    // 일부러 데이터 더 넣어보기
+        //arrayTest.remove(1);
+        //console.log("1번 인덱스 제거::::",arrayTest);
+        //arrayTest.add(1, "new_data");
+        //console.log("1번 인덱스 새롭게 등록::::", arrayTest);
+
+    </script>
+</body>
+</html>
