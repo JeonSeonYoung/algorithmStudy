@@ -1,12 +1,17 @@
 package algorithm.study.linkedlist;
 
 import java.util.Iterator;
+import java.util.Random;
+import java.util.stream.IntStream;
 
-public class SinglyLinkedList<T> implements LinkedList<T> {
+import static algorithm.study.util.LapUtil.check;
+
+public class DoublyLinkedList<T> implements LinkedList<T> {
 
     class Node {
 
         private T value;
+        private Node prev;
         private Node next;
 
         public Node(T value) {
@@ -31,6 +36,10 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
             this.value = value;
         }
 
+        public Node getPrev() { return prev; }
+
+        public void setPrev(Node prev) { this.prev = prev; }
+
         public Node getNext() {
             return next;
         }
@@ -43,17 +52,32 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
             return next != null;
         }
 
+        public boolean hasPrev() {
+            return prev != null;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("[val : %s, prev : %s, next : %s]",
+                    value,
+                    hasPrev()? getPrev().getValue() : "null",
+                    hasNext()? getNext().getValue() : "null"
+            );
+        }
     }
 
     private Node head;
+    private Node tail;
     private int size = 0;
 
     @Override
     public void addFirst(T value) {
         if (isEmpty())
-            head = new Node(value);
+            head = tail = new Node(value);
         else {
             Node first = new Node(value, head);
+            first.setNext(head);
+            head.setPrev(first);
             head = first;
         }
         size++;
@@ -63,12 +87,13 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
     @Override
     public void addLast(T value) {
         if (isEmpty())
-            head = new Node(value);
+            head = tail = new Node(value);
         else {
             Node newLast = new Node(value);
-            Node last = head;
-            while (last.hasNext()) last = last.getNext();
+            Node last = tail;
             last.setNext(newLast);
+            newLast.setPrev(last);
+            tail = newLast;
         }
         size++;
     }
@@ -86,14 +111,19 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
 
         Node add = new Node(value, after);
         before.setNext(add);
+        add.setPrev(before);
+        after.setPrev(add);
 
         size++;
     }
 
     private Node moveTo(int index) {
-        Node iter = head;
-        for (int i = 0; i < index; i++) {
-            iter = iter.getNext();
+        boolean reverse = index > (size() / 2);
+        Node iter = reverse? tail : head;
+        int moves = reverse? size() - 1 - index : index;
+
+        for (int i = 0; i < moves; i++) {
+            iter = reverse? iter.getPrev() : iter.getNext();
         }
         return iter;
     }
@@ -105,6 +135,7 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
 
         T value = head.getValue();
         head = head.getNext();
+        head.setPrev(null);
 
         size--;
 
@@ -120,6 +151,7 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
 
         T value = frontOfLast.getNext().getValue();
         frontOfLast.setNext(null);
+        tail = frontOfLast;
 
         size--;
 
@@ -140,6 +172,8 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
         T value = after.getValue();
 
         before.setNext(after.getNext());
+        if(after.getNext() != null)
+            after.getNext().setPrev(before);
 
         size--;
 
@@ -153,7 +187,13 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
 
     @Override
     public void clear() {
-        head = null;
+        Node iter = tail;
+        while (iter.hasPrev()) {
+            iter.setNext(null);
+            iter = iter.getPrev();
+            iter.getNext().setPrev(null);
+        }
+        head = tail = null;
         size = 0;
     }
 
@@ -200,7 +240,7 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
                 "size : %s, head : %s, tail : %s",
                 size(),
                 !isEmpty()? head.getValue() : "null",
-                !isEmpty()? moveTo(size() - 1).getValue() : "null"
+                !isEmpty()? tail.getValue() : "null"
         );
     }
 
@@ -227,7 +267,7 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
     }
 
     public static void main(String[] args) {
-        LinkedList<Integer> linkedList = new SinglyLinkedList<>();
+        LinkedList<Integer> linkedList = new DoublyLinkedList<>();
         linkedList.addFirst(1);
         linkedList.addFirst(2);
         linkedList.addFirst(3);
@@ -275,5 +315,48 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
         System.out.println(linkedList.indexOf(5)); // -1
         System.out.println(linkedList.indexOf(10)); // 5
 
+        // for testing performance
+        LinkedList<Integer> singly = new SinglyLinkedList<>();
+        LinkedList<Integer> doubly = new DoublyLinkedList<>();
+        int length = 50_000;
+        int popped = 1_000;
+        Random random = new Random();
+
+        IntStream.range(1, length)
+                .map(x -> random.nextInt(length))
+                .forEach(singly::addLast);
+
+        IntStream.range(1, length)
+                .map(x -> random.nextInt(length))
+                .forEach(doubly::addLast);
+
+
+        check(
+                () -> IntStream.range(1, popped)
+                        .forEach(x -> singly.removeLast())
+        );
+        singly.printSummary();
+
+        check(
+                () -> IntStream.range(1, popped)
+                        .forEach(x -> doubly.removeLast())
+        );
+        doubly.printSummary();
+
+
+        check(
+                () -> IntStream.range(40_000, 40_000 + popped)
+                        .forEach(x -> singly.remove(x))
+        );
+        singly.printSummary();
+
+        check(
+                () -> IntStream.range(40_000, 40_000 + popped)
+                        .forEach(x -> doubly.remove(x))
+        );
+        doubly.printSummary();
+
     }
+
+
 }

@@ -18,4 +18,8 @@ public interface LinkedList<T> extends Iterable<T> {
     default void print() {
         System.out.println(toString());
     }
+    default String summary() { throw new RuntimeException("not implemented"); }
+    default void printSummary() {
+        System.out.println(summary());
+    }
 }
