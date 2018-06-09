@@ -181,6 +181,14 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
     }
 
     @Override
+    public T getFirst() {
+        if (isEmpty())
+            throw new IndexOutOfBoundsException("is empty");
+
+        return head.getValue();
+    }
+
+    @Override
     public String toString() {
         String result = "";
         if (head != null) {

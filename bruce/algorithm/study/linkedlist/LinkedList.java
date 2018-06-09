@@ -1,7 +1,5 @@
 package algorithm.study.linkedlist;
 
-import java.util.Iterator;
-
 public interface LinkedList<T> extends Iterable<T> {
     void addFirst(T value);
     void addLast(T value);
@@ -14,6 +12,9 @@ public interface LinkedList<T> extends Iterable<T> {
     boolean isEmpty();
     int indexOf(T value);
     boolean contains(T value);
+
+    default T getFirst() { throw new RuntimeException("not implemented"); }
+    default T getLast() { throw new RuntimeException("not implemented"); }
 
     default void print() {
         System.out.println(toString());
