@@ -10,124 +10,124 @@
     <script>
 
         var LinkedList = (function () {
-        var linkedList = function () {
-            if (!(this instanceof linkedList)) {
-                return new linkedList()
-            }
-            var privateMember = {
-                head: undefined,
-                tail: undefined,
-                current: undefined,
-                count: 0
-            }
-            var Node = function () {
+            var linkedList = function () {
+                if (!(this instanceof linkedList)) {
+                    return new linkedList()
+                }
                 var privateMember = {
-                    prevNode: undefined,
-                    nextNode: undefined,
-                    nodeData: undefined
+                    head: undefined,
+                    tail: undefined,
+                    current: undefined,
+                    count: 0
+                }
+                var Node = function () {
+                    var privateMember = {
+                        prevNode: undefined,
+                        nextNode: undefined,
+                        nodeData: undefined
+                    };
+                    var privateMethod = {
+                        getPrev: function () {
+                            return privateMember.prevNode
+                        },
+                        setPrev: function (pPrevNode) {
+                            privateMember.prevNode = pPrevNode
+                        },
+                        getNext: function () {
+                            return privateMember.nextNode
+                        },
+                        setNext: function (pNextNode) {
+                            privateMember.nextNode = pNextNode
+                        },
+                        getData: function () {
+                            return privateMember.nodeData
+                        },
+                        setData: function (pNodeData) {
+                            privateMember.nodeData = pNodeData
+                        }
+                    }
+                    return {
+                        getPrev: privateMethod.getPrev,
+                        setPrev: privateMethod.setPrev,
+                        getNext: privateMethod.getNext,
+                        setNext: privateMethod.setNext,
+                        getData: privateMethod.getData,
+                        setData: privateMethod.setData
+                    }
                 };
-                var privateMethod = {
-                    getPrev: function () {
-                    return privateMember.prevNode
-                    },
-                    setPrev: function (pPrevNode) {
-                    privateMember.prevNode = pPrevNode
-                    },
-                    getNext: function () {
-                    return privateMember.nextNode
-                    },
-                    setNext: function (pNextNode) {
-                    privateMember.nextNode = pNextNode
-                    },
-                    getData: function () {
-                    return privateMember.nodeData
-                    },
-                    setData: function (pNodeData) {
-                    privateMember.nodeData = pNodeData
-                    }
-                }
-                return {
-                    getPrev: privateMethod.getPrev,
-                    setPrev: privateMethod.setPrev,
-                    getNext: privateMethod.getNext,
-                    setNext: privateMethod.setNext,
-                    getData: privateMethod.getData,
-                    setData: privateMethod.setData
-                }
-            };
 
-            var privateMethod = {
-                add: function (pData) {
-                var lNode = new Node()
-                lNode.setData(pData) // 노드 데이터 채우기
-                if (privateMethod.getTail()) {
-                    privateMethod.getTail().setNext(lNode) // 꼬리의 다음 노드를 추가된 노드로
-                    lNode.setPrev(privateMethod.getTail()) // 추가된 노드의 이전 노드를 꼬리로
-                    lNode.setNext(privateMethod.getHead()) // 추가된 노드의 다음 노드를 머리로
-                    privateMethod.setTail(lNode) // 꼬리 변경
-                } else {
-                    privateMethod.setHead(lNode) // 머리 변경
-                    privateMethod.setTail(lNode) // 꼬리 변경
-                }
-                if (!privateMethod.getCurrent()) { // 현재위치가 설정되어있지 않다면 머리를 현재위치로
-                    privateMethod.setCurrent(privateMethod.getHead())
-                }
-                privateMember.count++ // 리스트 카운트 증가
-                return privateMethod.getTail() // 추가된 노드를 넘겨준다.
-                },
-                getHead: function () {
-                return privateMember.head
-                },
-                setHead: function (pNode) {
-                privateMember.head = pNode
-                },
-                isHead: function (pNode) {
-                return (pNode === privateMember.head)
-                },
-                getTail: function () {
-                return privateMember.tail
-                },
-                setTail: function (pNode) {
-                privateMember.tail = pNode
-                },
-                isTail: function (pNode) {
-                return (pNode === privateMember.tail)
-                },
-                getCurrent: function () {
-                return privateMember.current
-                },
-                setCurrent: function (pNode) {
-                privateMember.current = pNode
-                },
-                getCount: function () {
-                return privateMember.count
-                },
-                getNode: function (pIndex) {
-                var lNode;
-                if (pIndex >= 0) {
-                    lNode = privateMethod.getHead()
-                    while (pIndex >0) {
-                        lNode = lNode.getNext()
-                        pIndex--
+                var privateMethod = {
+                    add: function (pData) {
+                        var lNode = new Node()
+                        lNode.setData(pData) // 노드 데이터 채우기
+                        if (privateMethod.getTail()) {
+                            privateMethod.getTail().setNext(lNode) // 꼬리의 다음 노드를 추가된 노드로
+                            lNode.setPrev(privateMethod.getTail()) // 추가된 노드의 이전 노드를 꼬리로
+                            lNode.setNext(privateMethod.getHead()) // 추가된 노드의 다음 노드를 머리로
+                            privateMethod.setTail(lNode) // 꼬리 변경
+                        } else {
+                            privateMethod.setHead(lNode) // 머리 변경
+                            privateMethod.setTail(lNode) // 꼬리 변경
+                        }
+                        if (!privateMethod.getCurrent()) { // 현재위치가 설정되어있지 않다면 머리를 현재위치로
+                            privateMethod.setCurrent(privateMethod.getHead())
+                        }
+                        privateMember.count++ // 리스트 카운트 증가
+                            return privateMethod.getTail() // 추가된 노드를 넘겨준다.
+                        },
+                        getHead: function () {
+                            return privateMember.head
+                        },
+                        setHead: function (pNode) {
+                            privateMember.head = pNode
+                        },
+                        isHead: function (pNode) {
+                            return (pNode === privateMember.head)
+                        },
+                        getTail: function () {
+                            return privateMember.tail
+                        },
+                        setTail: function (pNode) {
+                            privateMember.tail = pNode
+                        },
+                        isTail: function (pNode) {
+                            return (pNode === privateMember.tail)
+                        },
+                        getCurrent: function () {
+                            return privateMember.current
+                        },
+                        setCurrent: function (pNode) {
+                            privateMember.current = pNode
+                        },
+                        getCount: function () {
+                            return privateMember.count
+                        },
+                        getNode: function (pIndex) {
+                            var lNode;
+                            if (pIndex >= 0) {
+                                lNode = privateMethod.getHead()
+                                while (pIndex >0) {
+                                    lNode = lNode.getNext()
+                                    pIndex--
+                                }
+                                return lNode
+                            }
+                            return false
+                        }
                     }
-                    return lNode
-                }
-                return false
+                return {
+                    add: privateMethod.add,
+                    setCurrent: privateMethod.setCurrent,
+                    getCurrent: privateMethod.getCurrent,
+                    getHead: privateMethod.getHead,
+                    isHead: privateMethod.isHead,
+                    getTail: privateMethod.getTail,
+                    isTail: privateMethod.isTail,
+                    getCount: privateMethod.getCount,
+                    getNode: privateMethod.getNode
                 }
             }
-            return {
-                add: privateMethod.add,
-                setCurrent: privateMethod.setCurrent,
-                getCurrent: privateMethod.getCurrent,
-                getHead: privateMethod.getHead,
-                isHead: privateMethod.isHead,
-                getTail: privateMethod.getTail,
-                isTail: privateMethod.isTail,
-                getCount: privateMethod.getCount,
-                getNode: privateMethod.getNode
-            }
-        }
-        return linkedList
+            return linkedList
         })()
 
     </script>
