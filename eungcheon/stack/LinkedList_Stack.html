@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<script>
+    var SinglyLinkedList_stack = function(){
+
+        //Node data
+        var Node = function(data){
+            this.data = data;
+            this.next = null;
+        }
+
+        //Linked-List
+        var LinkedList = {
+            length : 0,
+            head : null
+        }
+
+        //function
+        var fun = {
+            push : function(val){
+
+                if(val == null){
+                    return 'data is null';
+                }
+
+                //새로운 노드 생성
+                var node = new Node(val);
+                var current = LinkedList.head;
+
+                if(LinkedList.head == null){
+                    //node에 data 없으면 바로저장 
+                    LinkedList.head = node;
+                }else{
+                    while (current.next) {
+                        current = current.next;
+                    } 
+                    current.next = node;
+                }
+                LinkedList.length++;
+            },
+            pop : function(){
+                var current = LinkedList.head;
+
+                if(current == null){
+                    return '삭제할 데이터가 업음';
+                }else if(LinkedList.length == 1){
+                    fun.clear();
+                }
+                else{
+                    for(var i = 1; i < LinkedList.length;i++){
+                        if(i == (LinkedList.length-1)){
+                            current.next = null;
+                        }else{
+                            current = current.next;
+                        }
+                    }
+                }
+                LinkedList.length--;
+            },
+            peek : function(){
+                var current = LinkedList.head;
+
+                while(current.next){
+                    current = current.next;
+                }
+                return current;
+            },
+            size : function(){
+                return LinkedList.length;
+            },
+            clear : function(){
+                LinkedList.head = null;
+                LinkedList.length = 0;
+            },
+            isEmpty : function(){
+                if(LinkedList.head == null){
+                    return true;
+                }
+                return false;
+            },
+            getData : function(idx){
+                return LinkedList.head;
+            },
+        }
+        return{
+            push : fun.push,
+            pop : fun.pop,
+            peek : fun.peek,
+            size : fun.size,
+            clear : fun.clear,
+            isEmpty : fun.isEmpty,
+            get : fun.getData,
+        }
+    }
+
+    var list = new SinglyLinkedList_stack();
+
+</script>
+<body>
+   😃 - push(data)  : 등록<br/>
+   😃 - pop()       : 데이터 삭제<br/>
+   😃 - peek()      : 마지막 데이터 훔쳐보기<br/>
+   😃 - size()      : 사이즈<br/>
+   😃 - clear()     : 클리어<br/>
+   😃 - isEmpty()   : 비였는지 확인(T/F)<br/>
+</body>
+</html>

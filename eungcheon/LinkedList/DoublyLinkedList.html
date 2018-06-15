@@ -23,13 +23,16 @@
     DoublyLinkedList.prototype.addFirst = function (val) {
         var node = new Node(val);//새로은 node 추가
         var curr = this.head;
+
         if( curr == null ) {
             //처음 head가 비어있으면 node 추가 (처음 node)
             this.head = node;
             this.tail = node;
+
         } else {
             //head가 비어있지 않음(두번쨰 값
             //현재 값에 맨 처음 head저장
+            
             curr.prev = node;
             node.next = curr;
             this.head = node ; //head에 현재 노드 저장
@@ -246,6 +249,7 @@
     //list.isEmpty();
     //list.clear();
     console.log(list);
+
 </script>
 <body>
     *addFirst(val)

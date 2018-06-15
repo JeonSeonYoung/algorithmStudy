@@ -7,7 +7,6 @@
     <title>Document</title>
 </head>
 <script>
-
         
 var Node = function(data){
     this.data = data;
@@ -65,21 +64,6 @@ LinkedList.prototype.remove = function(position) {
         nodeToDelete = null,
         deletedNode = null;
  
-    // 1st use-case: an invalid position
-    if (position < 0 || position > length) {
-        throw new Error(message.failure);
-    }
- 
-    // 2nd use-case: the first node is removed
-    if (position === 1) {
-        this.head = currentNode.next;
-        deletedNode = currentNode;
-        currentNode = null;
-        this._length--;
-         
-        return deletedNode;
-    }
- 
     // 3rd use-case: any other node is removed
     while (count < position) {
         beforeNodeToDelete = currentNode;
@@ -103,14 +87,9 @@ LinkedList.prototype.isEmpty = function() {
 };
 
 
+var list = new LinkedList();
 
-LinkedList.prototype.add(110);
-LinkedList.prototype.add(2000);
-LinkedList.prototype.isSize();
-LinkedList.prototype.isEmpty();
-console.log(LinkedList.prototype.head);
-console.log(LinkedList.prototype.isSize());
-console.log(LinkedList.prototype.isEmpty());
+
 
 </script>
 <body>

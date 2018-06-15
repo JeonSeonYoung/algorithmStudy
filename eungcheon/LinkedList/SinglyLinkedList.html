@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<script>
+
+    
+    
+        
+    var SinglyLinkedList = function(){
+
+        //Node data
+        var Node = function(data){
+            this.data = data;
+            this.next = null;
+        }
+
+        //Linked-List
+        var LinkedList = {
+            length : 0,
+            head : null
+        }
+
+        //function
+        var fun = {
+            add : function(idx, val){
+                var node = new Node(val);
+                var current;
+
+                if(idx > LinkedList.length || idx < 0){
+                    return '크기 확인';
+                }
+                else if(LinkedList.head == null){
+                    //node에 data 없으면 바로저장 
+                    LinkedList.head = node;
+                }else if(idx == 0){
+                    fun.addFirst(val);
+                }else{
+                    var before = ''; 
+                    var after = '';
+
+                    for(var i = 1 ; i < idx ;i++){
+
+                        before = current.next;
+
+                    }
+
+                    while (current.next) {
+                        current = current.next;
+                    } 
+                    current.next = node;
+                }
+                LinkedList.length++;
+            },
+            addFirst : function(val){
+
+                if(val == null){
+                    return 'null';
+                }
+
+                var node = new Node(val);
+                var current = LinkedList.head;
+
+                if(LinkedList.head == null){
+                    //node에 data 없으면 바로저장 
+                    LinkedList.head = node;
+                }else{
+                    
+                    node.next = current;
+                    LinkedList.head = node;
+                }
+                LinkedList.length++;
+            },
+            addLast : function(val){
+
+                if(val == null){
+                    return 'null';
+                }
+
+                //새로운 노드 생성
+                var node = new Node(val);
+                var current = LinkedList.head;
+
+                if(LinkedList.head == null){
+                    //node에 data 없으면 바로저장 
+                    LinkedList.head = node;
+                }else{
+                    while (current.next) {
+                        current = current.next;
+                    } 
+                    current.next = node;
+                }
+                LinkedList.length++;
+            },
+            remove : function(idx){
+
+            },
+            removeFirst : function(){
+                var current = LinkedList.head;
+                if(current == null){
+                    return '삭제할 데이터가 업음';
+                }else{
+                    current = current.next;
+                    LinkedList.head = current;
+                }
+                LinkedList.length--;
+            },
+            removeLast : function(){
+                var current = LinkedList.head;
+                var del = '';
+
+                if(current == null){
+                    return '삭제할 데이터가 업음';
+                }else if(LinkedList.length == 1){
+                    removeFirst();
+                }else{
+
+                    for(var i = 1; i < LinkedList.length;i++){
+                        if(i == (LinkedList.length-1)){
+                            current.next = null;
+                        }else{
+                            current = current.next;
+                        }
+                    }
+                }
+                LinkedList.length--;
+            },
+            getData : function(idx){
+                return LinkedList;
+            },
+            size : function(){
+                
+            },
+            clear : function(){
+
+            },
+
+
+
+        }
+        return{
+            add : fun.add,
+            addFirst : fun.addFirst,
+            addLast : fun.addLast,
+            remove : fun.remove,
+            removeFirst : fun.removeFirst(),
+            removeLast : fun.removeLast(),
+            get : fun.getData(),
+
+        }
+    }
+
+    var list = new SinglyLinkedList();
+
+
+
+</script>
+<body>
+add
+remove-first, last, index
+get
+contains
+size
+clear
+iterator
+indexof
+</body>
+</html>
