@@ -7,14 +7,14 @@ import java.util.stream.Collectors;
 public class PostFix {
 
     private String infixExpression;
-    private Stack<String> operators;
+    private LinearStack<String> operators;
     private List<String> postfixElements;
 
     private int size;
 
     public PostFix(int size) {
         this.size = size;
-        operators = new Stack<>(size);
+        operators = new LinearStack<>(size);
         postfixElements = new ArrayList<>();
     }
 
@@ -67,7 +67,7 @@ public class PostFix {
     }
 
     public String compute() {
-        Stack<String> operandCache = new Stack<>(size);
+        LinearStack<String> operandCache = new LinearStack<>(size);
         for (String element : postfixElements) {
             if (isNum(element))
                 operandCache.push(element);

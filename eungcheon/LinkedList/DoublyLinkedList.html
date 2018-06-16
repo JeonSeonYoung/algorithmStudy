@@ -7,168 +7,264 @@
     <title>Document</title>
 </head>
 <script>
+
     var Node = function(val){
         this.val = val;
         this.prev = null;
         this.next = null;
     }
+
     var DoublyLinkedList = function () {
         this._length = 0;
         this.head = null;
         this.tail = null;
     }
+
     DoublyLinkedList.prototype.addFirst = function (val) {
         var node = new Node(val);//새로은 node 추가
         var curr = this.head;
+
         if( curr == null ) {
             //처음 head가 비어있으면 node 추가 (처음 node)
             this.head = node;
             this.tail = node;
+
         } else {
             //head가 비어있지 않음(두번쨰 값
             //현재 값에 맨 처음 head저장
+            
             curr.prev = node;
             node.next = curr;
             this.head = node ; //head에 현재 노드 저장
+            
         }
-        //???왜 작동안함..
         this._length++;
+        
         return node;
     }
+
     DoublyLinkedList.prototype.addLast = function (val) {
         var node = new Node(val);//새로은 node 추가
-        var curr = this.head; // 현재 head 값 저장
+        var curr = this.tail; // 현재 tail 값 저장
         var len = this._length;
         if( curr == null ) {
-            //처음 head가 비어있으면 node 추가 (처음 node)
+            //처음 tail가 비어있으면 node 추가 (처음 node)
             this.head = node;
             this.tail = node;
         } else {
-            //head가 비어있지 않음
-            while(curr.next){
-                //현재 node의 마지막 next 값을 저장
-                curr = curr.next;
-            }
             curr.next = node;
             node.prev = curr;
-
+            this.tail = node ; //head에 현재 노드 저장
         }
-        //???왜 작동안함..
         this._length++;
+
         return node;
     }
     DoublyLinkedList.prototype.removeFirst = function () {
-        var currentNode = this.head,
-        length = this._length,
-        count = 1,
-        message = {failure: 'Failure: non-existent node in this list.'},
-        beforeNodeToDelete = null,
-        nodeToDelete = null,
-        deletedNode = null;
-
-
-        this.head = currentNode.next;
-
-        // 2nd use-case: there is a second node
-        if (!this.head) {
-            this.head.prev = null;
-        // 2nd use-case: there is no second node
-        } else {
-            this.tail = null;
+        if(this.isEmpty()){
+            console.log('데이터가 없어요ㅠ_ㅠ...');
+        }else{
+            if(this._length == 1){
+                this.clear();
+            }else{
+                var curr = this.head;
+                this.head = curr.next;
+                this.head.prev = null;
+                this._length--;
+            }
         }
-
-
     }
+
     DoublyLinkedList.prototype.removeLast = function(){
-    }
-    DoublyLinkedList.prototype.add = function(val,index){
-    }
-    DoublyLinkedList.prototype.remove = function (pos) {
-    console.log(this._length);
-
-        if( pos > -1 && pos < this._length ) {
-            var curr = this.head;
-            var prev, index = 0;
-            if( pos === 0 ) {
-                this._head = curr.next;
-                if( this.length === 1 ) {
-                    this.tail = null;
-                } else {
-                    this.head.prev = null;
-                }
-            } else if( pos === this.length-1 ) {
-                curr = this._tail;
+        if(this.isEmpty()){
+            console.log('데이터가 없어요ㅠ_ㅠ...');
+        }else{
+            if(this._length == 1){
+                this.clear();
+            }else{
+                var curr = this.tail;
                 this.tail = curr.prev;
                 this.tail.next = null;
-            } else {
-                while( index++ < pos ) {
-                    prev = curr;
-                    curr = curr.next;
-                }
-                prev.next = curr.next;
-                curr.next.prev = prev;
+                this._length--;
             }
-            this._length --;
-            curr.next = null;
-            curr.prev = null;
-            return curr.data;
+        }
+    }
+    /*DoublyLinkedList.prototype.add = function(index,val){
+        if(index > this._length){
+            console.log('');
         }
 
-        return null;
+        var node = new Node(val);//새로은 node 추가
+
+        var currentNode = this.getCurrentNode(index);
+        console.log('ccc : '+currentNode);
+
+        node.prev = currentNode.prev;
+        node.next = currentNode;
+        currentNode.prev = node;
+        currentNode = node;
+
+        this.size++;
+    }*/
+
+    DoublyLinkedList.prototype.add = function(pos,data){
+        if( pos >= 0 && pos <= this._length ) { 
+            var node = new Node(data), 
+            curr = this.head,
+            prev, 
+            index = 0; 
+            if( pos === 0 ) { 
+                if( !this.head ) { 
+                    this.head = node; 
+                    this.tail = node; 
+                } else { 
+                    node.next = curr; 
+                    curr.prev = node; 
+                    head = node; 
+                } 
+            } else if ( pos === this._length) { 
+                curr = this.tail; 
+                curr.next = node; 
+                node.prev = curr; 
+                this.tail = node; 
+            }else { 
+                while( index++ < pos ) { 
+                    prev = curr; 
+                    curr = curr.next; 
+                } 
+                node.next = curr; 
+                prev.next = node; 
+                curr.prev = node; 
+                node.prev = prev; 
+            } 
+            this._length ++; 
+            return true; 
+        } 
+        return false;
+
     }
-    DoublyLinkedList.prototype.size = function(){
-        console.log('size');
-    }
-    DoublyLinkedList.prototype.clear = function(){
-    }
-    DoublyLinkedList.prototype.isEmpty = function(){
-        var len = this._length;
-        if('0' == len){
-            console.log('isEmpty : true = ' + len);
-            return true;
+
+    DoublyLinkedList.prototype.remove = function (index) {
+    
+        if(this.isEmpty()){
+            console.log('데이터가 없어요ㅠ_ㅠ...');
         }else{
-            console.log('isEmpty : false = ' + len);
+            if(index ==0 || this._length ==1){
+                this.removeFirst();
+                return;
+            }
+            if(this.size <= index+1){
+                this.removeLast();
+                return;
+            }
+            var currentNode = this.getCurrentNode(index);
+            var prevNode = currentNode.prev;
+            var nextNode = currentNode.next;
+            prevNode = nextNode;
+            this._length--;
+        }
+    }
+
+    DoublyLinkedList.prototype.getCurrentNode = function(index){
+        var current = null;
+
+        if(!this.isEmpty()){
+            current = this.head;
+            console.log('asd : '+current.next);
+            for(var i=1 ; i<index; i++){
+                current = current.next;
+            }
+        }
+        return current;
+    }
+    
+
+
+    DoublyLinkedList.prototype.size = function(){
+        return this._length();
+    }
+
+    DoublyLinkedList.prototype.clear = function(){
+        //null로 입력
+        this.head = null;
+        this.tail = null;
+        this._length = 0;
+    }
+
+    DoublyLinkedList.prototype.isEmpty = function(){
+        console.log(this._length);
+        if(0 < this._length){
+            console.log('isEmpty : false = ' + this._length);
+            return false;
+        }else{
+            console.log('isEmpty : true = ' + this._length);
+            return true;
+        }
+    }
+
+    DoublyLinkedList.prototype.indexOf = function(val){
+        //값의 위치
+        var curr = this.head;
+        if(!this.isEmpty()){
+            for(var i=1; i < this._length ; i++){
+                if(val == curr.val){
+                    return console.log('같은 값이 존재! : '+curr.val);    
+                }
+                curr = curr.next;
+            }
+        }
+    }
+
+    DoublyLinkedList.prototype.contains = function(val){
+        //값이 존재하는지 / true, false
+        var curr = this.head;
+        if(!this.isEmpty()){
+            for(var i=1; i < this._length ; i++){
+                if(val == curr.val){
+                    return true;    
+                }
+                curr = curr.next;
+            }
             return false;
         }
     }
-    DoublyLinkedList.prototype.indexOf = function(val){
-        //값의 위치
-    }
-    DoublyLinkedList.prototype.contains = function(val){
-        //값이 존재하는지 / true, false
-    }
-    DoublyLinkedList.prototype.toString = function(val){
-
-    }
-
-    //console.log(DoublyLinkedList.prototype.addFirst(1));
-    //console.log(DoublyLinkedList.prototype.addLast(3));
-    //console.log(DoublyLinkedList.prototype.addFirst(2));
-    //console.log(DoublyLinkedList.prototype.addLast(100));
-    //console.log(DoublyLinkedList.prototype.addFirst(1));
-    //console.log(DoublyLinkedList.prototype.remove(2));
-    //console.log('head : '+DoublyLinkedList.prototype.head);
-    //DoublyLinkedList.prototype.addFirst(10);
-    //DoublyLinkedList.prototype.isEmpty();
 
     var list = new DoublyLinkedList();
+
+    //list.addLast(2);
+    //list.addFirst(1);
+    //list.add(2,2)
+    //list.addFirst(2);
+    //list.addFirst(3);
     list.addLast(1);
+    list.addLast(3);
+     
+    list.addLast(4);
+    //list.remove(2);
+    list.add(0,200);
+    
+    //list.remove(1);
+    //list.removeLast();
+    //list.removeFirst();
+    //list.isEmpty();
+    //list.clear();
+    console.log(list);
 
 </script>
 <body>
-    addFirst(val)
-    addLast(val)
-    removeFirst()
-    removeLast()
+    *addFirst(val)
+    *addLast(val)
+    *removeFirst()
+    *removeLast()
 
 
     add(index,val)
     remove(index)
 
-    size()
-    clear()
+    *size()
+    *clear()
 
-    isEmpty()
+    *isEmpty()
 
     indexOf(val) -> 값의 위치
     contains(val) -> 값이 존재하는지 / true, false

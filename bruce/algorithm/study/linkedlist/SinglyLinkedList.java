@@ -81,6 +81,11 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
         if (size <= index)
             throw new IndexOutOfBoundsException(index + "");
 
+        if(index == 0) {
+            addFirst(value);
+            return;
+        }
+
         Node before = moveTo(index - 1);
         Node after = moveTo(index);
 
@@ -134,6 +139,12 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
         if (size <= index)
             throw new IndexOutOfBoundsException(index + "");
 
+        if(index == 0)
+            return removeFirst();
+
+        if(index == size - 1)
+            return removeLast();
+
         Node before = moveTo(index - 1);
         Node after = moveTo(index);
 
@@ -178,6 +189,14 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
     @Override
     public boolean contains(T value) {
         return indexOf(value) != -1;
+    }
+
+    @Override
+    public T getFirst() {
+        if (isEmpty())
+            throw new IndexOutOfBoundsException("is empty");
+
+        return head.getValue();
     }
 
     @Override
@@ -261,19 +280,24 @@ public class SinglyLinkedList<T> implements LinkedList<T> {
         }
         System.out.println(""); // 7 1 8
 
+        System.out.println(linkedList.remove(0)); // 7
+        linkedList.print(); // [1, 8], size : 2
+        System.out.println(linkedList.remove(1)); // 8
+        linkedList.print(); // [1], size : 1
+
         linkedList.addFirst(9);
         linkedList.addLast(10);
-        linkedList.add(3, 11);
-        linkedList.print(); // [9, 7, 1, 11, 8, 10], size : 6
+        linkedList.add(0, 11);
+        linkedList.print(); // [11, 9, 1, 10], size : 4
 
 
         System.out.println(linkedList.contains(9)); // T
         System.out.println(linkedList.contains(4)); // F
         System.out.println(linkedList.contains(1)); // T
 
-        System.out.println(linkedList.indexOf(11)); // 3
+        System.out.println(linkedList.indexOf(11)); // 0
         System.out.println(linkedList.indexOf(5)); // -1
-        System.out.println(linkedList.indexOf(10)); // 5
+        System.out.println(linkedList.indexOf(10)); // 3
 
     }
 }
