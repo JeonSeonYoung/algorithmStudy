@@ -164,6 +164,14 @@ public class DoublyLinkedList<T> implements LinkedList<T> {
     }
 
     @Override
+    public T getFirst() {
+        if (isEmpty())
+            throw new IndexOutOfBoundsException("is empty");
+
+        return head.getValue();
+    }
+
+    @Override
     public T remove(int index) {
         if (isEmpty())
             throw new IndexOutOfBoundsException("is empty");

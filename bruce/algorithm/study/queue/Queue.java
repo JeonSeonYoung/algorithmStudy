@@ -7,9 +7,13 @@ public interface Queue<T> {
     int size();
     void clear();
     boolean isEmpty();
-    boolean isFull();
+    default boolean isFull() { return false; }
 
     default void print() {
         System.out.println(toString());
+    }
+    default String summary() { throw new RuntimeException("not implemented"); }
+    default void printSummary() {
+        System.out.println(summary());
     }
 }

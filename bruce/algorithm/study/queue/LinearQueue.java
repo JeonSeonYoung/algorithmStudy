@@ -73,6 +73,14 @@ public class LinearQueue<T> implements Queue<T> {
                 ;
     }
 
+    @Override
+    public String summary() {
+        return String.format(
+                "size : %s, peek : %s",
+                size(), (size()>0)? peek() : "null"
+        );
+    }
+
     public static void main(String[] args) {
         Queue<Integer> queue = new LinearQueue<>(3);
 

@@ -1,53 +1,54 @@
 package algorithm.study.queue;
 
+import algorithm.study.linkedlist.DoublyLinkedList;
+import algorithm.study.linkedlist.LinkedList;
+import algorithm.study.linkedlist.SinglyLinkedList;
+import algorithm.study.stack.LinearStack;
+import algorithm.study.stack.LinkedStack;
+import algorithm.study.stack.Stack;
+
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static algorithm.study.util.LapUtil.check;
+
 public class LinkedQueue<T> implements Queue<T> {
 
-    Object[] data;
+    private LinkedList<T> data;
 
-    private int head;
-    private int tail;
-
-    private int maxSize;
-
-    public LinkedQueue(int size) {
-        maxSize = size;
-        data = new Object[size];
-        head = tail = 0;
+    public LinkedQueue() {
+        data = new DoublyLinkedList<T>();
     }
 
     @Override
     public void enqueue(T value) {
         if (isFull())
             throw new IndexOutOfBoundsException("is full");
-        data[tail++] = value;
+        data.addLast(value);
     }
 
     @Override
     public T dequeue() {
         if (isEmpty())
             throw new IndexOutOfBoundsException("is empty");
-        return (T) data[head++];
+        return data.removeFirst();
     }
 
     @Override
     public T peek() {
         if (isEmpty())
             throw new IndexOutOfBoundsException("is empty");
-        return (T) data[head];
+        return data.getFirst();
     }
 
     @Override
     public int size() {
-        return tail - head;
+        return data.size();
     }
 
     @Override
     public void clear() {
-        data = new Object[maxSize];
-        head = tail = 0;
+        data.clear();
     }
 
     @Override
@@ -56,25 +57,15 @@ public class LinkedQueue<T> implements Queue<T> {
     }
 
     @Override
-    public boolean isFull() {
-        return size() == maxSize;
+    public String toString() {
+        return data.toString();
     }
 
     @Override
-    public String toString() {
-        return "[" +
-                IntStream.range(head, tail)
-                        .mapToObj(idx -> data[idx])
-                        .map(Object::toString)
-                        .collect(Collectors.joining(", "))
-                + "], size : " + this.size()
-                + ", isEmpty : " + this.isEmpty()
-                + ", isFull : " + this.isFull()
-                ;
-    }
+    public String summary() { return data.summary(); }
 
     public static void main(String[] args) {
-        Queue<Integer> queue = new LinkedQueue<>(3);
+        Queue<Integer> queue = new LinkedQueue<>();
 
         queue.print();
 
@@ -97,6 +88,35 @@ public class LinkedQueue<T> implements Queue<T> {
 
         queue.clear();
         queue.print();
+
+
+        final int length = 3_000_000; // 500_000_000;
+        final int popped = 1_000_000;
+
+        Queue<Integer> linearStack = new LinearQueue<>(length);
+        check(
+                () -> IntStream.range(0, length).forEach(linearStack::enqueue)
+        );
+
+        linearStack.printSummary();
+
+        Queue<Integer> linkedStack = new LinkedQueue<>();
+        check(
+                () -> IntStream.range(0, length).forEach(linkedStack::enqueue)
+        );
+
+        linkedStack.printSummary();
+
+
+        check(
+                () -> IntStream.range(0, popped).forEach(x -> linearStack.dequeue())
+        );
+        linearStack.printSummary();
+
+        check(
+                () -> IntStream.range(0, popped).forEach(x -> linkedStack.dequeue())
+        );
+        linkedStack.printSummary();
 
 
     }
