@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>LinkedList_Stack</title>
 </head>
 <script>
     var SinglyLinkedList_stack = function(){
-
+        
         //Node data
         var Node = function(data){
             this.data = data;
@@ -100,6 +100,14 @@
     }
 
     var list = new SinglyLinkedList_stack();
+    console.log(list.push(1));
+    console.log(list.push(2));
+    console.log(list.push(3));
+    console.log(list.isEmpty());
+    console.log(list.get());
+    console.log(list.pop());
+    console.log(list.peek());
+    console.log(list.get());
 
 </script>
 <body>

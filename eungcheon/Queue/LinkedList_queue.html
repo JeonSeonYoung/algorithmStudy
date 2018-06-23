@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>study - Queue</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+    var SinglyLinkedList_stack = function(){
+    
+        //Node data
+        var Node = function(data){
+            this.data = data;
+            this.next = null;
+        }
+
+        //Linked-List
+        var LinkedList = {
+            length : 0,
+            head : null
+        }
+
+        //function
+        var fun = {
+            enqueue : function(val){
+                if(val == null){
+                    return 'null';
+                }
+
+                //새로운 노드 생성
+                var node = new Node(val);
+                var current = LinkedList.head;
+
+                if(LinkedList.head == null){
+                    //node에 data 없으면 바로저장 
+                    LinkedList.head = node;
+                }else{
+                    while (current.next) {
+                        current = current.next;
+                    } 
+                    current.next = node;
+                }
+                LinkedList.length++;
+            },
+            dequeue : function(){
+                var current = LinkedList.head;
+                if(current == null){
+                    return '삭제할 데이터가 업음';
+                }else{
+                    current = current.next;
+                    LinkedList.head = current;
+                }
+                LinkedList.length--;
+            },
+            peek : function(){
+                var current = LinkedList.head;
+
+                while(current.next){
+                    current = current.next;
+                }
+                return current;
+            },
+            size : function(){
+                return LinkedList.length;
+            },
+            clear : function(){
+                LinkedList.head = null;
+                LinkedList.length = 0;
+            },
+            isEmpty : function(){
+                if(LinkedList.head == null){
+                    return true;
+                }
+                return false;
+            },
+            get : function(){
+                var data = '';
+                var current = LinkedList.head;
+
+                if(current == null){
+                    data = 'data없음';
+                }else{
+                    data = current.data + ', ';
+                    while (current.next) {
+                        data = data + current.next.data + ', ';
+                        current = current.next;
+                    } 
+                }
+                
+
+                return data;
+            },
+        }
+        return{
+            enqueue : fun.enqueue,
+            dequeue : fun.dequeue,
+            peek : fun.peek,
+            size : fun.size,
+            clear : fun.clear,
+            isEmpty : fun.isEmpty,
+            get : fun.get,
+        }
+    }
+
+    $(document).ready(function(){
+        var list = new SinglyLinkedList_stack();
+        $('#jgetData').text(list.get);
+
+
+        $('#jenqueue').click(function(){
+            
+            var val = $('#jinput').val();
+
+            if('' == val){
+                alert('값을 입력하세요.');
+                return false;
+            }
+
+            list.enqueue(val);
+            $('#jinput').val('');
+
+            $('#jgetData').text(list.get);
+            //console.log('get : ' + list.get());
+        });
+
+        $('#jdequeue').click(function(){
+            list.dequeue();
+            $('#jgetData').text(list.get);
+            //console.log(list.get());
+        });
+
+
+        $('#jget').click(function(){
+            $('#jgetData').text(list.get);
+            console.log(list.get());
+        });
+        
+    });
+
+    
+    
+</script>
+<style>
+.btn{ margin:10px;}
+.enqueue{background-color:cornflowerblue;}
+.dequeue{background-color:cornsilk;}
+.peek{background-color:darkseagreen}
+.size{background-color:rgb(57, 169, 184);}
+.clear{background-color:rgb(187, 185, 46);}
+.isEmpty{background-color:rgba(163, 71, 199, 0.788);}
+.isFull{background-color:rgba(188, 214, 93, 0.719);}
+.get{background-color:rgba(194, 176, 75, 0.719);}
+</style>
+<body>
+    <!--jquery-->
+    <div style='width:50%;float:left;'>
+        <div>
+            <input type='text' id='jinput'/>
+            <button id='jenqueue'class='enqueue'>enqueue(value)</button>
+            
+        </div>
+        <div>
+            <div class='btn'><button id='jdequeue' class='dequeue' >dequeue()</button></div>
+            <div class='btn'><button id='' class='peek'>peek()</button></div>
+            <div class='btn'><button id='' class='size'>size()</button></div>
+            <div class='btn'><button id='' class='clear'>clear()</button></div>
+            <div class='btn'><button id='' class='isEmpty'>isEmpty()</button></div>
+            <div class='btn'><button id='' class='isFull'>isFull()</button></div>
+            <!--
+                <div class='btn'><button id='jget'>get()</button></div>
+            -->
+        </div>
+        <div id='jgetData'>
+            
+        </div>
+    </div>
+
+    <!--vue-->
+    <div id="app">
+        <div>
+            <input type='text' id='input_data' v-model.number='input' type='number'/>
+            <button class='enqueue' v-on:click="enqueue(this)">enqueue(value)</button>
+            
+        </div>
+        <div>
+            <div class='btn'><button class='dequeue' @click="dequeue()">dequeue()</button></div>
+            <div class='btn'><button class='peek'>peek()</button></div>
+            <div class='btn'><button class='size'>size()</button></div>
+            <div class='btn'><button class='clear'>clear()</button></div>
+            <div class='btn'><button class='isEmpty'>isEmpty()</button></div>
+            <div class='btn'><button class='isFull'>isFull()</button></div>
+            <!--
+            <button id='' style='background-colr:'></button>
+            <button id='' style='background-colr:'></button>
+            -->
+        </div>
+        <div id='getData'>
+            {{nodedata}}
+        </div>
+    </div>
+</body>
+<script>
+
+    var Node = function(data){
+        this.data = data;
+        this.next = null;
+    }
+
+    //Linked-List
+    var LinkedList = {
+        length : 0,
+        head : null
+    }
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: '안녕하세요 Vue!',
+            input : '',
+            nodedata : ''
+        },
+        methods : {
+            enqueue : function(){
+                var val = this.input
+                
+                if(val == ''){
+                    return alert('데이터 입력');;
+                }
+
+                //새로운 노드 생성
+                var node = new Node(val);
+                var current = LinkedList.head;
+
+                if(LinkedList.head == null){
+                    //node에 data 없으면 바로저장 
+                    LinkedList.head = node;
+                }else{
+                    while (current.next) {
+                        current = current.next;
+                    } 
+                    current.next = node;
+                }    
+
+                LinkedList.length++;
+
+                this.get()
+            },
+            dequeue : function(){
+                var current = LinkedList.head;
+                if(current == null){
+                    return '삭제할 데이터가 업음';
+                }else{
+                    current = current.next;
+                    LinkedList.head = current;
+                }
+                LinkedList.length--;
+
+                this.get()
+            },
+            peek : function(){
+                var current = LinkedList.head;
+
+                while(current.next){
+                    current = current.next;
+                }
+                return current;
+            },
+            size : function(){
+                return LinkedList.length;
+            },
+            clear : function(){
+                LinkedList.head = null;
+                LinkedList.length = 0;
+            },
+            isEmpty : function(){
+                if(LinkedList.head == null){
+                    return true;
+                }
+                return false;
+            },
+            get : function(){
+                var current = LinkedList.head;
+
+                if(current == null){
+                    this.nodedata = 'data없음';
+                }else{
+                    this.nodedata = current.data + ', ';
+                    while (current.next) {
+                        this.nodedata = this.nodedata + current.next.data + ', ';
+                        current = current.next;
+                    } 
+                }
+                return this.nodedata;
+            },
+        },
+        mounted : function(){
+            this.nodedata = '데이터없음'
+            console.log('mounted');
+        },
+        beforeUpdated : function(){
+            console.log('beforeUpdated');
+        },
+        updated : function(){
+            console.log('updated');
+        }
+    })
+</script>
+</html>
