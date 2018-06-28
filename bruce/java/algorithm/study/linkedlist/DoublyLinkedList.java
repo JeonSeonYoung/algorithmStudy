@@ -206,6 +206,8 @@ public class DoublyLinkedList<T> implements LinkedList<T> {
 
     @Override
     public void clear() {
+        if(size() == 0)
+            return;
         Node iter = tail;
         while (iter.hasPrev()) {
             iter.setNext(null);
