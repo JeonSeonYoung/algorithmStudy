@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <title> Make Hash code function</title>
+</head>
+<body>
+  <input id="originalText" type="input" />
+  <label id="result"></label>
+  <button type="button">해시코드 변환</button>
+   <script type="text/javascript">
+
+    /* 참고 사이트
+    * https://ratsgo.github.io/data%20structure&algorithm/2017/10/25/hash/
+    * http://bcho.tistory.com/1072
+    * http://hyeonstorage.tistory.com/265
+    * Hello Coding 그림으로 개념을 이해하는 알고리즘, (공)저:아디트야 바르가바, 한빛미디어
+    * linked-list http://jinbroing.tistory.com/149
+    */
+
+    // hashTable : Array
+    // hashTable value : Linked List
+
+    // (one address, several datas) : chaining
+    // (one address, one data): open addressing
+
+    var SooHashCode = (function() {
+        var sooHashCode = function() {
+          this.size = 10;
+          this.deleteWord = "DEL";
+          this.hashTable = new Array(this.size);
+          this.linkedList = new SooLinkedList();
+        };
+
+        sooHashCode.prototype.Contains = function (key) {
+            var idx = this.HashFunction(key);
+            return this.hashTable[idx] ? true : false;
+        };
+
+        sooHashCode.prototype.RemoveKey = function (key) {
+          var hashCode = this.HashFunction(key);
+          this.hashTable[hashCode] = null; console.log(this.hashTable);
+        };
+
+        sooHashCode.prototype.CollisionMaxCount = function () {
+          var max = 0;
+          for(var arr = 0; arr < this.size; arr++) {
+             if (this.hashTable[arr]) {
+               max = (max < this.hashTable[arr]._length) ?
+                    this.hashTable[arr]._length : max;
+             }
+          }
+          return max;
+        };
+
+        sooHashCode.prototype.Put = function (key) {
+            var hashCode = this.HashFunction(key);
+            //console.log(key, hashCode);
+
+            // make linkedlist in each bucket
+            if (!this.Contains(key)) {
+              var sooLinkedList = new SooLinkedList();
+               this.hashTable[hashCode] = sooLinkedList.append(key);
+            }
+            else {
+               this.hashTable[hashCode].append(key);
+            }
+            console.log(this.hashTable);
+            return hashCode;
+        };
+
+        sooHashCode.prototype.Get = function (idx) {
+            return this.hashTable[idx];
+        }
+
+        sooHashCode.prototype.HashFunction = function (key) {
+          // convert key to unicode
+          var unicodeKey = "";
+          for (var idx = 0; idx < key.length; idx++) {
+              unicodeKey += key.charCodeAt(idx);
+          }
+
+          return unicodeKey % this.size;
+        }
+
+        return sooHashCode;
+    })();
+
+    var SooLinkedList = (function() {
+        function Node(data) {
+            this.data = data;
+            this.next = null;
+        }
+
+        var sooLinkedList = function() {
+            this._length = 0;    // data length in linked-list
+            this._head = null;   // start point
+        }
+
+        sooLinkedList.prototype.append = function(data) {
+            var node = new Node(data);
+            var currNode;
+
+            // set start node
+            if (this._head == null) {
+                this._head = node;
+            }
+            else {
+                // set next node
+                currNode = this._head;
+                while(currNode.next) {
+                    currNode = currNode.next;
+                }
+                currNode.next = node;
+            }
+            this._length++;
+            return this;
+        }
+
+        sooLinkedList.prototype.find = function(data) {
+        }
+
+        sooLinkedList.prototype.remove = function(data) {
+          // console.log(this.find(data));
+          // 여기서 remove 할 필요없나?
+        }
+
+        return sooLinkedList;
+    })();
+
+    var sooHashCode = new SooHashCode();
+    sooHashCode.Put("apple");
+    sooHashCode.Put("blueberry");
+    sooHashCode.Put("strawberry");
+    console.log(sooHashCode.CollisionMaxCount()); // 2
+    console.log(sooHashCode.Contains("apple")); // true
+    sooHashCode.RemoveKey("apple");
+    console.log(sooHashCode.Contains("apple")); // false
+
+  </script>
+</body>
+</html>
