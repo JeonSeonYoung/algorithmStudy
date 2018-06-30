@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>study - hash</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+    var hash = function(){
+    
+        //Node data
+
+        const size = 11;
+
+        var Node = function(data){
+            this.data = data;
+            this.next = null;
+        }
+
+        var LinkedList = function(node){
+            this.length = 0;
+            this.head = node;
+        }
+        
+        var hashTable = new Array(size);
+        //var hashTable = [];
+
+        //function
+        var fun = {
+            put : function(val){
+
+                if(val == null){
+                    return 'null';
+                }
+
+                //해쉬값 생성
+                var current = '';
+                const _hash = this.hash(val);
+
+                //노드생성
+                var node = new Node(val);
+                
+                if(hashTable[_hash] == null){
+                    var list = new LinkedList(node);
+                    hashTable[_hash] = list;
+                }else{
+                    current = hashTable[_hash].head;
+                    while (current.next) {
+                        current = hashTable[_hash].head.next;
+                    }
+                    current.next  = node;
+                }
+                hashTable[_hash].length++;
+            },
+            contains : function(key){
+                const _hash = this.hash(key);
+                
+                if(hashTable[_hash] == null){
+                    console.log('없어요없어');
+                   return false; 
+                }
+                var current = hashTable[_hash].head;
+                
+                if(current.data == key){
+                    return console.log("있네용?1");
+                }else{
+                    while(current.next){
+                        if(current.next.data == key){
+                            console.log('있네용?2');
+                            return;
+                        }
+                        current = current.next;
+                    }
+                }
+                
+
+                console.log('없어요없어2');
+                return current;
+            },
+            maxcount : function(){
+                var maxsize = 0;
+                for(var i=0 ; i < size ; i++){
+                    if(hashTable[i] != null){
+                        console.log(hashTable[i].length);
+                        maxsize < hashTable[i].length ? maxsize = hashTable[i].length : maxsize; 
+                    }
+                }
+                return maxsize;
+            },
+            clear : function(){
+                for(var i=0 ; i<size;i++){
+                    hashTable[i] = null;
+                }
+            },
+            removekey : function(key){
+                hashTable[key] = null;
+            },
+            get : function(){
+                console.log(hashTable);
+                
+            },
+            hash : function(key){
+                //console.log(key % size );
+                return key % size
+            }
+        }
+        return{
+            put : fun.put,
+            contains : fun.contains,
+            maxcount : fun.maxcount,
+            clear : fun.clear,
+            removekey : fun.removekey,
+            get : fun.get,
+            hash : fun.hash,
+        }
+    }
+
+    $(document).ready(function(){
+        var list = new hash();
+        //list.put(11);
+        //list.put(13);
+        //list.put(11);
+        //list.put(13);
+        //list.contains(11);
+        //list.maxcount();
+        
+
+        $("#put").click(function(){
+            var inputkey = $("#input1").val();
+
+            list.put(inputkey);
+            $("#input1").val("");
+            list.get();
+        });
+        
+
+        $("#removekey").click(function(){
+            var inputkey2 = $("#input2").val();
+            list.removekey(inputkey2);
+        });
+        
+        $("#contains").click(function(){
+            var inputkey3 = $("#input3").val();
+            list.contains(inputkey3);
+        });
+
+        $("#maxcount").click(function(){
+
+        });
+    });
+
+    
+    
+</script>
+<style>
+    .btn{ margin:10px;}
+    .enqueue{background-color:cornflowerblue;}
+    .dequeue{background-color:cornsilk;}
+    .peek{background-color:darkseagreen}
+    .size{background-color:rgb(57, 169, 184);}
+    .clear{background-color:rgb(187, 185, 46);}
+    .isEmpty{background-color:rgba(163, 71, 199, 0.788);}
+    .isFull{background-color:rgba(188, 214, 93, 0.719);}
+    .get{background-color:rgba(194, 176, 75, 0.719);}
+</style>
+<body>
+    <div>
+        <input type="text" id='input1'/>
+        <button id='put'>put</button>
+    </div>
+    <div>
+        <input type="text" id='input2'/>
+        <button id='removekey'>removekey</button>
+    </div>
+    <div>
+        <input type="text" id='input3'/>
+        <button id='contains'>contains</button>
+    </div>
+    <div>
+        <button id='maxcount'>maxcount</button>
+    </div>
+    contains(key) - 있는지 없는지 확인 <br/>
+    😀removekey(key) - 해당 key 전체 삭제 <br/>
+    😀maxcount - 가장 많이 충돌한 횟수 반환 <br/>
+    😀put(key) - 등록 <br/>
+</body>
+<script>
+
+    var Node = function(data){
+        this.data = data;
+        this.next = null;
+    }
+
+    //Linked-List
+    var LinkedList = {
+        length : 0,
+        head : null
+    }
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: '안녕하세요 Vue!',
+            input : '',
+            nodedata : ''
+        },
+        methods : {
+        },
+        mounted : function(){
+            this.nodedata = '데이터없음'
+            console.log('mounted');
+        },
+        beforeUpdated : function(){
+            console.log('beforeUpdated');
+        },
+        updated : function(){
+            console.log('updated');
+        }
+    })
+</script>
+</html>
