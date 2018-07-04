@@ -67,6 +67,7 @@
           }
           console.log(this.root);
         };
+      
         binarySearchTree.prototype.Contains = function (data) {
           var currentNode = this.root;
 
@@ -94,6 +95,7 @@
             }
           }
         };
+      
         binarySearchTree.prototype.GetParent = function (data) {
           var currentNode = this.root;
           var parentNode = null;
@@ -126,6 +128,7 @@
           }
           // console.log(this.root);
         };
+      
         binarySearchTree.prototype.Remove = function (data) {
           var parentNode = this.GetParent(data);
           if (parentNode === null) {
