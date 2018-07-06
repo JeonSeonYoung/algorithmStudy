@@ -26,8 +26,12 @@
 
     var SooHashCode = (function() {
         var sooHashCode = function() {
-          this.size = 10;
-          this.deleteWord = "DEL";
+            if (!(this instanceof sooHashCode)) {
+                console.log('new');
+                   return new sooHashCode();
+               }
+               
+          this.size = 11;
           this.hashTable = new Array(this.size);
           this.linkedList = new SooLinkedList();
         };
@@ -128,10 +132,12 @@
         return sooLinkedList;
     })();
 
-    var sooHashCode = new SooHashCode();
+    var sooHashCode = SooHashCode();
     sooHashCode.Put("apple");
     sooHashCode.Put("blueberry");
     sooHashCode.Put("strawberry");
+    sooHashCode.Put("banana");
+    sooHashCode.Put("12345");
     console.log(sooHashCode.CollisionMaxCount()); // 2
     console.log(sooHashCode.Contains("apple")); // true
     sooHashCode.RemoveKey("apple");

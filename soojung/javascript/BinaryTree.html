@@ -1,4 +1,169 @@
-/* Reference
-* Binary tree - https://ratsgo.github.io/data%20structure&algorithm/2017/10/21/tree/
-* Binary tree traversal - https://www.hooni.net/xe/study/66487
-*/
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <title> Make Hash code function</title>
+</head>
+<body>
+   <script type="text/javascript">
+     
+    /* Reference
+    * Binary tree - https://ratsgo.github.io/data%20structure&algorithm/2017/10/21/tree/
+    * Binary tree traversal - https://www.hooni.net/xe/study/66487
+    */
+     
+    var Node = (function() {
+      var node = function(left, data, right) {
+        if (!(this instanceof node)) {
+          return new node(left, data, right);
+        }
+        this.left = left;
+        this.data = data;
+        this.right = right;
+      }
+      return node;
+    })();
+
+    var BinarySearchTree = (function() {
+        var binarySearchTree = function() {
+            if (!(this instanceof binarySearchTree)) {
+                   return new binarySearchTree();
+            }
+
+            this.root = null;
+        };
+
+        binarySearchTree.prototype.Put = function (data) {
+
+          if (this.root === null) {
+            this.root = Node(null, data, null);
+            console.log(this.root);
+            return;
+          }
+
+          var currentNode = this.root;
+
+          while(true) {
+            if (data < currentNode.data) {
+              if (currentNode.left === null) {
+                currentNode.left = Node(null, data, null);
+                break;
+              }
+              currentNode = currentNode.left;
+              continue;
+            }
+            else if ( data == currentNode.data) {
+              // 중복은 얘기 안됨
+              console.log('Same value!');
+              return;
+            }
+            else if (data > currentNode.data){
+              if (currentNode.right === null) {
+                currentNode.right = Node(null, data, null);
+                break;
+              }
+              currentNode = currentNode.right;
+              continue;
+            }
+          }
+          console.log(this.root);
+        };
+      
+        binarySearchTree.prototype.Contains = function (data) {
+          var currentNode = this.root;
+
+          if (currentNode === null) {
+            return false;
+          }
+
+          while(true) {
+            if (data < currentNode.data) {
+              if (currentNode.left === null) {
+                return false;
+              }
+              currentNode = currentNode.left;
+              continue;
+            }
+            else if (data == currentNode.data) {
+              return true;
+            }
+            else {
+              if (currentNode.right === null) {
+                return false;
+              }
+              currentNode = currentNode.right;
+              continue;
+            }
+          }
+        };
+      
+        binarySearchTree.prototype.GetParent = function (data) {
+          var currentNode = this.root;
+          var parentNode = null;
+
+          if (currentNode === null || data == this.root.data) {
+            return null;
+          }
+
+          while(true) {
+            if (data < currentNode.data) {
+              if (currentNode.left === null) {
+                return null;
+              }
+              parentNode = currentNode;
+              currentNode = currentNode.left;
+              continue;
+            }
+            else if (data == currentNode.data) {
+              // console.log(this.root);
+              return parentNode;
+            }
+            else {
+              if (currentNode.right === null) {
+                return null;
+              }
+              parentNode = currentNode;
+              currentNode = currentNode.right;
+              continue;
+            }
+          }
+          // console.log(this.root);
+        };
+      
+        binarySearchTree.prototype.Remove = function (data) {
+          var parentNode = this.GetParent(data);
+          if (parentNode === null) {
+            if ((this.root !== null) && (data == this.root.data))
+              this.root = null;
+            console.log('remove all');
+            return;
+          }
+
+          if (data < parentNode.data) {
+            parentNode.left = null;
+          }
+          else {
+            parentNode.right = null;
+          }
+          console.log(this.root);
+        };
+        return binarySearchTree;
+    })();
+
+    var BST = BinarySearchTree();
+    BST.Put(5);
+    BST.Put(23);
+    BST.Put(25);
+    BST.Put(8);
+    BST.Put(4);
+
+    console.log(BST.Contains(23));  // true
+    console.log(BST.Contains(10));  // false
+    //console.log(BST.GetParent(8)); // Node of 23
+
+    // BST.Remove(23);
+    // BST.Remove(5);
+    // BST.Put(25);
+
+  </script>
+</body>
+</html>
