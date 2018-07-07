@@ -125,15 +125,22 @@ public class BinarySearchTree<T> implements BinaryTree<T> {
 
         tree.put(1);
         tree.put(6);
-        tree.put(2);
         tree.put(3);
+        tree.put(2);
+        tree.put(4);
+        /*
+           1
+               6
+             3
+           2   4
+         */
 
         System.out.println(tree.contains(3));
         System.out.println(tree.contains(5));
 
 
         System.out.println(
-                tree.getParentValueOf(3)
+                tree.getParentValueOf(2)
                         .map(Object::toString)
                         .orElse("none")
         );
