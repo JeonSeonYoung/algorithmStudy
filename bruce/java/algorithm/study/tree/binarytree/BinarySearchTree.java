@@ -152,11 +152,11 @@ public class BinarySearchTree<T> implements BinaryTree<T> {
         );
 
 
-        tree.removeSubtreeFor(2);
+        tree.removeSubtreeFor(3);
 
 
-        System.out.println(tree.contains(2));
         System.out.println(tree.contains(3));
+        System.out.println(tree.contains(2));
         System.out.println(tree.contains(1));
 
         tree.removeSubtreeFor(1); // clear
