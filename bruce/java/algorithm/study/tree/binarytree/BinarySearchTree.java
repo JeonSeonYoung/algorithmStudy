@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import static algorithm.study.util.LapUtil.check;
 
+// TODO : 중복 검사 처리
 public class BinarySearchTree<T> implements BinaryTree<T> {
     private class Node {
         private T value;
