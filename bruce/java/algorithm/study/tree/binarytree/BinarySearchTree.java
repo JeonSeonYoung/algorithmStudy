@@ -3,6 +3,7 @@ package algorithm.study.tree.binarytree;
 import algorithm.study.linkedlist.DoublyLinkedList;
 import algorithm.study.linkedlist.LinkedList;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -12,8 +13,36 @@ import java.util.stream.Collectors;
 import static algorithm.study.util.LapUtil.check;
 
 // TODO : 중복 검사 처리
-public class BinarySearchTree<T> implements BinaryTree<T> {
-    private class Node {
+// TODO : remove 시 자식이 존재하는 경우 처리 방법 확인
+/*
+ none : 단순 삭제
+ left only : left 를 끌어올림
+ right only : right 를 끌어올림
+ both : 해당 subtree root 의 left / right 중 하나 선택후 해당영역의 min node 선택 후 swap
+*/
+public class BinarySearchTree<T extends Comparable<?>> implements BinaryTree<T> {
+
+    enum TraverseOrder {
+        PREORDER, INORDER, POSTORDER
+    }
+
+    class TraversedPath {
+        List<Node> path = new ArrayList<>();
+
+        public void add(Node node) {
+            path.add(node);
+        }
+
+        @Override
+        public String toString() {
+            return path.stream()
+                    .map(Node::getValue)
+                    .map(Object::toString)
+                    .collect(Collectors.joining(" -> "));
+        }
+    }
+
+    class Node {
         private T value;
         private Node left;
         private Node right;
@@ -34,6 +63,14 @@ public class BinarySearchTree<T> implements BinaryTree<T> {
 
         public T getValue() {
             return value;
+        }
+
+        public Node getLeft() {
+            return left;
+        }
+
+        public Node getRight() {
+            return right;
         }
 
         public void setLeft(Node left) {
@@ -117,8 +154,58 @@ public class BinarySearchTree<T> implements BinaryTree<T> {
         return true;
     }
 
+    @Override
+    public void remove(T value) {
+
+    }
+
+    @Override
+    public TraversedPath traverse(TraverseOrder order) {
+        if (TraverseOrder.PREORDER.equals(order))
+            return preorder(root, new TraversedPath());
+        if (TraverseOrder.INORDER.equals(order))
+            return inorder(root, new TraversedPath());
+        if (TraverseOrder.POSTORDER.equals(order))
+            return postorder(root, new TraversedPath());
+
+        throw new RuntimeException("not implemented");
+    }
+
+
+    private TraversedPath preorder(Node node, TraversedPath currentPath) {
+        if (node == null)
+            return currentPath;
+        currentPath.add(node);
+        currentPath = preorder(node.left, currentPath);
+        currentPath = preorder(node.right, currentPath);
+        return currentPath;
+    }
+
+    private TraversedPath inorder(Node node, TraversedPath currentPath) {
+        if (node == null)
+            return currentPath;
+        currentPath = inorder(node.left, currentPath);
+        currentPath.add(node);
+        currentPath = inorder(node.right, currentPath);
+        return currentPath;
+    }
+
+    private TraversedPath postorder(Node node, TraversedPath currentPath) {
+        if (node == null)
+            return currentPath;
+        currentPath = postorder(node.left, currentPath);
+        currentPath = postorder(node.right, currentPath);
+        currentPath.add(node);
+        return currentPath;
+    }
+
     private void clear() {
         root = null;
+    }
+
+    //@Override
+    public void print() {
+        BTreePrinter.printNode(root);
     }
 
     public static void main(String[] args) {
@@ -129,12 +216,23 @@ public class BinarySearchTree<T> implements BinaryTree<T> {
         tree.put(3);
         tree.put(2);
         tree.put(4);
+        tree.put(7);
+        tree.put(-1);
+        tree.put(-3);
+        tree.put(0);
+
+        tree.print();
         /*
            1
                6
              3
            2   4
          */
+
+        System.out.println("PREORDER : " + tree.traverse(TraverseOrder.PREORDER));
+        System.out.println("INORDER : " + tree.traverse(TraverseOrder.INORDER));
+        System.out.println("POSTORDER : " + tree.traverse(TraverseOrder.POSTORDER));
+
 
         System.out.println(tree.contains(3));
         System.out.println(tree.contains(5));
@@ -155,12 +253,12 @@ public class BinarySearchTree<T> implements BinaryTree<T> {
 
         tree.removeSubtreeFor(3);
 
-
         System.out.println(tree.contains(3));
         System.out.println(tree.contains(2));
         System.out.println(tree.contains(1));
 
         tree.removeSubtreeFor(1); // clear
+
 
         final int length = 3_000_000; // 500_000_000;
         final int popped = 1_000;
@@ -191,4 +289,92 @@ public class BinarySearchTree<T> implements BinaryTree<T> {
         );
 
     }
+}
+
+// reference : https://stackoverflow.com/questions/4965335/how-to-print-binary-tree-diagram
+class BTreePrinter {
+
+    public static <T extends Comparable<?>> void printNode(BinarySearchTree<T>.Node root) {
+        int maxLevel = BTreePrinter.maxLevel(root);
+
+        printNodeInternal(Collections.singletonList(root), 1, maxLevel);
+    }
+
+    private static <T extends Comparable<?>> void printNodeInternal(List<BinarySearchTree<T>.Node> nodes, int level, int maxLevel) {
+        if (nodes.isEmpty() || BTreePrinter.isAllElementsNull(nodes))
+            return;
+
+        int floor = maxLevel - level;
+        int endgeLines = (int) Math.pow(2, (Math.max(floor - 1, 0)));
+        int firstSpaces = (int) Math.pow(2, (floor)) - 1;
+        int betweenSpaces = (int) Math.pow(2, (floor + 1)) - 1;
+
+        BTreePrinter.printWhitespaces(firstSpaces);
+
+        List<BinarySearchTree<T>.Node> newNodes = new ArrayList<BinarySearchTree<T>.Node>();
+        for (BinarySearchTree<T>.Node node : nodes) {
+            if (node != null) {
+                System.out.print(node.getValue());
+                newNodes.add(node.getLeft());
+                newNodes.add(node.getRight());
+            } else {
+                newNodes.add(null);
+                newNodes.add(null);
+                System.out.print(" ");
+            }
+
+            BTreePrinter.printWhitespaces(betweenSpaces);
+        }
+        System.out.println("");
+
+        for (int i = 1; i <= endgeLines; i++) {
+            for (int j = 0; j < nodes.size(); j++) {
+                BTreePrinter.printWhitespaces(firstSpaces - i);
+                if (nodes.get(j) == null) {
+                    BTreePrinter.printWhitespaces(endgeLines + endgeLines + i + 1);
+                    continue;
+                }
+
+                if (nodes.get(j).getLeft() != null)
+                    System.out.print("/");
+                else
+                    BTreePrinter.printWhitespaces(1);
+
+                BTreePrinter.printWhitespaces(i + i - 1);
+
+                if (nodes.get(j).getRight() != null)
+                    System.out.print("\\");
+                else
+                    BTreePrinter.printWhitespaces(1);
+
+                BTreePrinter.printWhitespaces(endgeLines + endgeLines - i);
+            }
+
+            System.out.println("");
+        }
+
+        printNodeInternal(newNodes, level + 1, maxLevel);
+    }
+
+    private static void printWhitespaces(int count) {
+        for (int i = 0; i < count; i++)
+            System.out.print(" ");
+    }
+
+    private static <T extends Comparable<?>> int maxLevel(BinarySearchTree<T>.Node node) {
+        if (node == null)
+            return 0;
+
+        return Math.max(BTreePrinter.maxLevel(node.getLeft()), BTreePrinter.maxLevel(node.getRight())) + 1;
+    }
+
+    private static <T> boolean isAllElementsNull(List<T> list) {
+        for (Object object : list) {
+            if (object != null)
+                return false;
+        }
+
+        return true;
+    }
+
 }

@@ -7,4 +7,9 @@ public interface BinaryTree<T> {
     boolean contains(T value);
     Optional<T> getParentValueOf(T value);
     boolean removeSubtreeFor(T value);
+
+    void remove(T value);
+    BinarySearchTree.TraversedPath traverse(BinarySearchTree.TraverseOrder order);
+
+    void print();
 }
