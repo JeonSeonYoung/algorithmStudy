@@ -49,18 +49,46 @@ public class MyBinarySearchTree {
         }
     }
 
-    private Node search(char data){
-        Node currNode = root;
-        while(currNode != null){
-            if(data < currNode.data){
-                currNode = currNode.left;
-            }else if(data > currNode.data){
-                currNode = currNode.right;
-            }else{
-                return currNode;
-            }
+    // 전위순회
+    public void preOrder(){
+        preOrder(this.root);
+        System.out.println();
+    }
+
+    private void preOrder(Node currNode){
+        if(currNode != null){
+            System.out.print(currNode.data + " - ");
+            preOrder(currNode.left);
+            preOrder(currNode.right);
         }
-        return currNode;
+    }
+
+    // 중위순회
+    public void inOrder(){
+        inOrder(this.root);
+        System.out.println();
+    }
+
+    private void inOrder(Node currNode){
+        if(currNode != null){
+            inOrder(currNode.left);
+            System.out.print(currNode.data + " - ");
+            inOrder(currNode.right);
+        }
+    }
+
+    // 후위순회
+    public void postOrder(){
+        postOrder(this.root);
+        System.out.println();
+    }
+
+    private void postOrder(Node currNode){
+        if(currNode != null){
+            postOrder(currNode.left);
+            postOrder(currNode.right);
+            System.out.print(currNode.data + " - ");
+        }
     }
 
     public boolean contains(char data){
