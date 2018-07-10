@@ -36,7 +36,7 @@
 
           if (this.root === null) {
             this.root = Node(null, data, null);
-            console.log(this.root);
+            // console.log(this.root);
             return;
           }
 
@@ -53,7 +53,7 @@
             }
             else if ( data == currentNode.data) {
               // 중복은 얘기 안됨
-              console.log('Same value!');
+              // console.log('Same value!');
               return;
             }
             else if (data > currentNode.data){
@@ -65,7 +65,7 @@
               continue;
             }
           }
-          console.log(this.root);
+          // console.log(this.root);
         };
       
         binarySearchTree.prototype.Contains = function (data) {
@@ -146,24 +146,68 @@
           }
           console.log(this.root);
         };
+        
+        binarySearchTree.prototype.PreOrder = function (node) {
+            // root > left > right
+            if (node !== null) {
+                console.log(node.data);
+                this.PreOrder(node.left);
+                this.PreOrder(node.right);
+            }
+        }
+        
+        binarySearchTree.prototype.InOrder = function (node) {
+            // left > root > right
+            if (node !== null) {
+                this.PreOrder(node.left);
+                console.log(node.data);
+                this.PreOrder(node.right);
+            }
+        }
+        
+        binarySearchTree.prototype.OutOrder = function (node) {
+            // left > right > root
+            if (node !== null) {
+                this.PreOrder(node.left);
+                this.PreOrder(node.right);
+                console.log(node.data);
+            }
+        }
+        
         return binarySearchTree;
     })();
 
     var BST = BinarySearchTree();
+    BST.Put(6);
     BST.Put(5);
-    BST.Put(23);
-    BST.Put(25);
-    BST.Put(8);
+    BST.Put(7);
+    BST.Put(3);
+    BST.Put(2);
     BST.Put(4);
-
-    console.log(BST.Contains(23));  // true
-    console.log(BST.Contains(10));  // false
+    BST.Put(1);
+    BST.Put(8);
+    BST.Put(10);
+    BST.Put(11);
+    BST.Put(9);
+    BST.Put(12);
+    
+    // console.log(BST.Contains(23));  // true
+    // console.log(BST.Contains(10));  // false
     //console.log(BST.GetParent(8)); // Node of 23
 
     // BST.Remove(23);
     // BST.Remove(5);
     // BST.Put(25);
+    
+    
+    // -----------------------
 
+    // PreOrder
+    // BST.PreOrder(BST.root); // 6 5 3 2 1 4 7 8 10 9 11 12
+    // BST.InOrder(BST.root); // 5 3 2 1 4 6 7 8 10 9 11 12
+    BST.OutOrder(BST.root); // 5 3 2 1 4 7 8 10 9 11 6
+    
+    
   </script>
 </body>
 </html>
