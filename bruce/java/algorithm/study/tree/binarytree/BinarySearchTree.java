@@ -97,7 +97,8 @@ public class BinarySearchTree<T extends Comparable<?>> implements BinaryTree<T> 
 
     @Override
     public void put(T value) {
-        root = put(value, root, null);
+        if(!contains(value))
+            root = put(value, root, null);
     }
 
     private Node put(T value, Node node, Node parent) {
@@ -269,6 +270,7 @@ public class BinarySearchTree<T extends Comparable<?>> implements BinaryTree<T> 
         tree.put(-1);
         tree.put(-3);
         tree.put(0);
+        tree.put(1); // duplicate
 
         tree.put(8);
         tree.print();
