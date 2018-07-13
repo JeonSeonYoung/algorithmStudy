@@ -70,27 +70,34 @@
       
         binarySearchTree.prototype.Contains = function (data) {
           var currentNode = this.root;
+          var result = {
+            "isContain" : false,
+            "position": currentNode
+          };
 
           if (currentNode === null) {
-            return false;
+            return result;
           }
 
           while(true) {
             if (data < currentNode.data) {
               if (currentNode.left === null) {
-                return false;
+                return result;
               }
               currentNode = currentNode.left;
+              result.position = currentNode;
               continue;
             }
             else if (data == currentNode.data) {
-              return true;
+              result.isContain = true;
+              return result;
             }
             else {
               if (currentNode.right === null) {
-                return false;
+                return result;
               }
               currentNode = currentNode.right;
+              result.position = currentNode;
               continue;
             }
           }
@@ -150,7 +157,6 @@
         binarySearchTree.prototype.PreOrder = function (node) {
             // root > left > right
             if (node !== null) {
-                console.log(node.data);
                 this.PreOrder(node.left);
                 this.PreOrder(node.right);
             }
@@ -159,21 +165,61 @@
         binarySearchTree.prototype.InOrder = function (node) {
             // left > root > right
             if (node !== null) {
-                this.PreOrder(node.left);
-                console.log(node.data);
-                this.PreOrder(node.right);
+                this.InOrder(node.left);
+                this.InOrder(node.right);
             }
         }
         
         binarySearchTree.prototype.OutOrder = function (node) {
             // left > right > root
             if (node !== null) {
-                this.PreOrder(node.left);
-                this.PreOrder(node.right);
+                this.OutOrder(node.left);
+                this.OutOrder(node.right);
                 console.log(node.data);
             }
         }
-        
+
+        // 하나 지우면 좌/우 에서 가장 last data 를 찾아
+        // 삭제한 곳에 넣어준다.
+
+        binarySearchTree.prototype.RemoveOne = function (data) {
+            var containResult = this.Contains(data);
+            var currentNode = null,
+              parentNode = null,
+              lastData = null;
+
+            if (containResult.isContain) {
+              
+              currentNode = containResult.position;
+
+              while(true) {
+                
+                if (currentNode.left !== null) {
+                  currentNode = currentNode.left;
+                  lastData = currentNode.data;
+                  continue;
+                }
+                else {
+
+                  // 마지막 노드 삭제
+                  parentNode = this.GetParent(lastData);
+                  parentNode.left = null;
+                  // console.log(parentNode);
+
+                  // 삭제할 노드에 마지막 노드 추가
+                  containResult.position.data = lastData;
+                  // console.log(containResult.position);
+                  break;
+                }
+              }
+              console.log(this.root);
+              return;
+            }
+            else {
+              console.log("삭제할 데이터가 트리에 존재하지 않습니다.");
+            }
+
+        }
         return binarySearchTree;
     })();
 
@@ -191,7 +237,7 @@
     BST.Put(9);
     BST.Put(12);
     
-    // console.log(BST.Contains(23));  // true
+    // console.log(BST.Contains(12));  // true
     // console.log(BST.Contains(10));  // false
     //console.log(BST.GetParent(8)); // Node of 23
 
@@ -199,14 +245,16 @@
     // BST.Remove(5);
     // BST.Put(25);
     
-    
     // -----------------------
 
     // PreOrder
     // BST.PreOrder(BST.root); // 6 5 3 2 1 4 7 8 10 9 11 12
     // BST.InOrder(BST.root); // 5 3 2 1 4 6 7 8 10 9 11 12
-    BST.OutOrder(BST.root); // 5 3 2 1 4 7 8 10 9 11 6
+    // BST.OutOrder(BST.root); // 5 3 2 1 4 7 8 10 9 11 6
     
+    // BST.RemoveOne(6); // 루트삭제
+    BST.RemoveOne(5); // 루트삭제
+    //BST.RemoveOne(7);
     
   </script>
 </body>
