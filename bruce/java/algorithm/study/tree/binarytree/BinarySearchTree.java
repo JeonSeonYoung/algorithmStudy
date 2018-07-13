@@ -13,13 +13,6 @@ import java.util.stream.Collectors;
 import static algorithm.study.util.LapUtil.check;
 
 // TODO : 중복 검사 처리
-// TODO : remove 시 자식이 존재하는 경우 처리 방법 확인
-/*
- none : 단순 삭제
- left only : left 를 끌어올림
- right only : right 를 끌어올림
- both : 해당 subtree root 의 left / right 중 하나 선택후 해당영역의 min node 선택 후 swap
-*/
 public class BinarySearchTree<T extends Comparable<?>> implements BinaryTree<T> {
 
     enum TraverseOrder {
@@ -65,6 +58,8 @@ public class BinarySearchTree<T extends Comparable<?>> implements BinaryTree<T> 
             return value;
         }
 
+        public void setValue(T value) { this.value = value; }
+
         public Node getLeft() {
             return left;
         }
@@ -79,6 +74,22 @@ public class BinarySearchTree<T extends Comparable<?>> implements BinaryTree<T> 
 
         public void setRight(Node right) {
             this.right = right;
+        }
+
+        public boolean hasLeft() {
+            return this.left != null;
+        }
+
+        public boolean hasRight() {
+            return this.right != null;
+        }
+
+        public boolean hasBoth() {
+            return hasLeft() && hasRight();
+        }
+
+        public boolean isLeaf() {
+            return !hasLeft() && !hasRight();
         }
     }
 
@@ -155,8 +166,46 @@ public class BinarySearchTree<T extends Comparable<?>> implements BinaryTree<T> 
     }
 
     @Override
-    public void remove(T value) {
+    public boolean remove(T value) {
+        return remove(value, root);
+    }
 
+    private boolean remove(T value, Node node) {
+        Optional<Node> foundOptional = find(value, node);
+        if (!foundOptional.isPresent())
+            return false;
+
+        Node found = foundOptional.get();
+        Node parent = found.getParent();
+        if(found.isLeaf()) {
+            found.setParent(null);
+            if (isLessThan(parent.value, value))
+                parent.setLeft(null);
+            else parent.setRight(null);
+        } else if(found.hasBoth()) { // http://www.algolist.net/Data_structures/Binary_search_tree/Removal
+            // get right subtree
+            Node rightSubtree = found.getRight();
+            // get min val(left most) node of right subtree
+            Node leftMost = rightSubtree;
+            while(leftMost.getLeft() != null)
+                leftMost = leftMost.getLeft();
+            // set found node val as min val
+            found.setValue(leftMost.getValue());
+            // remove min val from right subtree
+            remove(leftMost.getValue(), rightSubtree);
+        } else if(found.hasLeft()) {
+            Node candidate = found.getLeft();
+            if (isLessThan(parent.value, value))
+                parent.setLeft(candidate);
+            else parent.setRight(candidate);
+        } else if(found.hasRight()) {
+            Node candidate = found.getRight();
+            if (isLessThan(parent.value, value))
+                parent.setLeft(candidate);
+            else parent.setRight(candidate);
+        }
+
+        return true;
     }
 
     @Override
@@ -221,18 +270,23 @@ public class BinarySearchTree<T extends Comparable<?>> implements BinaryTree<T> 
         tree.put(-3);
         tree.put(0);
 
+        tree.put(8);
         tree.print();
-        /*
-           1
-               6
-             3
-           2   4
-         */
+        tree.remove(8);
+        tree.print();
+
+        tree.put(8);
+        tree.put(10);
+        tree.print();
+        tree.remove(8);
+        tree.print();
+
+        tree.remove(6);
+        tree.print();
 
         System.out.println("PREORDER : " + tree.traverse(TraverseOrder.PREORDER));
         System.out.println("INORDER : " + tree.traverse(TraverseOrder.INORDER));
         System.out.println("POSTORDER : " + tree.traverse(TraverseOrder.POSTORDER));
-
 
         System.out.println(tree.contains(3));
         System.out.println(tree.contains(5));
