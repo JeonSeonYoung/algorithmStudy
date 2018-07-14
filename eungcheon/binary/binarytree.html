@@ -21,86 +21,189 @@
 
         //BinaryTree
         var bt = {
-            root: null
+            root: null,
+            nodedata: [],
+            removedata: '',
+            removeparent: '',
         }
 
         //function
         var fun = {
 
             put: function (data) {
-                var node = new Node(data, null, null);
-                var current = null;
-                var loop = true;
-
-
                 if (bt.root == null) {
                     //root비었을 때
+                    var node = new Node(data, null, null);
                     bt.root = node;
+
                 } else {
                     //input data와 root data비교
-                    if (fun.contains(data, 'put')) {
-                        return console.log('같은값이 이쏘!');
+                    if (fun.contains(data)) {
+                        return console.log('같은값 있음!!');
                     }
-                    current = bt.root;
-                    while (loop) {
-                        if (data < current.data) {
-                            if (current.left == null) {
-                                current.left = node;
-                                loop = false;
-                            } else {
-                                current = current.left
-                            }
-                        } else {
-                            if (current.right == null) {
-                                current.right = node;
-                                loop = false;
-                            } else {
-                                current = current.right
-                            }
-                        }
-                    }
+
+                    fun.gedata(data, 'put');
                 }
             },
-            contains: function (data, functionType) {
+            contains: function (data) {
+                return fun.gedata(data, 'contains');
+            },
+            getParent: function (data) {
+                return console.log('getParent : ' + fun.gedata(data, 'getParent'));
+            },
+            removeAllnode: function (data) {
+                return fun.gedata(data, 'removeAllnode') ? console.log(data + '를 삭제했네요.') : console.log('해당 데이터가없어용;;');
+            },
+            remove: function (data) {
+
+                if (!fun.contains(data)) {
+                    return console.log('해당값이 없어요!');
+                }
+
+                //삭제할 노드 위치 찾기
+                var getnode = fun.gedata(data, 'remove');
+
+
+                //최하위 왼쪽노드 가져오기
+                fun.getMinLeft(getnode.currentnode);
+
+
+                if (getnode.currentnode.data == bt.removedata.data) {
+                    getnode.parentnode.left == null ? getnode.parentnode.right = null : getnode.parentnode.left = null
+                } else {
+                    getnode.currentnode.data = bt.removedata.data;
+                    bt.removeparent.right != null ? bt.removeparent.right = null : bt.removeparent.left = null;
+                }
+
+                bt.removedata = '';
+                bt.removeparent = '';
+
+            },
+            get: function () {
+                //console.log(bt);
+                bt.nodedata = [];
+
+                if (bt.root != null) {
+                    fun.preorder(bt.root);
+                }
+            },
+            preorder: function (node) {
+                if (node != null) {
+                    bt.nodedata.push(node.data)
+
+                    //console.log(node.data + " ");
+                    console.log(bt.nodedata);
+
+                    this.preorder(node.left);
+                    this.preorder(node.right);
+                } else {
+                    console.log(bt.nodedata);
+                }
+            },
+            getMinLeft: function (node) {
+
+                var current = node;
+
+                while (current.left != null) {
+                    bt.removeparent = current;
+                    current = current.left;
+                }
+
+                if (current.right != null) {
+
+                    bt.removeparent = current;
+                    current = current.right;
+
+                    if (current.lef != null) {
+                        bt.removeparent = current;
+                        current = current.left;
+                    }
+                    this.getMinRight(current);
+                } else {
+
+                    bt.removedata = current;
+
+                }
+
+            },
+            getMinRight: function (node) {
+
+                var current = node;
+
+                while (current.right != null) {
+
+                    bt.removeparent = current;
+                    current = current.right;
+                }
+                if (current.left != null) {
+                    bt.removeparent = current;
+                    current = current.left;
+
+                    if (current.right != null) {
+                        bt.removeparent = current;
+                        current = current.right;
+                    }
+
+                    this.getMinRight(current);
+                } else {
+                    bt.removedata = current;
+                    return bt.removedata;
+                }
+
+            },
+            gedata: function (data, functionType) {
 
                 var _data = {
                     contains: false,
                     remove_at: false,
-                    parent: null
+                    parent: null,
+                    parentnode: null,
+                    currentnode: null,
                 }
                 var parent = null;
+
                 if (bt.root == null) {
                     return false;
                 }
+
                 var current = bt.root;
+                _data.currentnode = bt.root;
 
                 if (current.data == data) {
                     _data.contains = true;
-                    return _data.contains;
+                    //return _data.contains;
                 }
 
                 while (true) {
                     //parent 데이터 삽입
                     _data.parent = current.data;
+                    _data.parentnode = current;
                     parent = current;
+
                     if (data < current.data) {
                         //null인지 확인
                         if (current.left != null) {
-                            //null 아니면 데이터 비교
                             if (current.left.data == data) {
+                                _data.currentnode = current.left;
                                 _data.contains = true;
-
-                                if (functionType == 'remove') {
+                                if (functionType == 'removeAllnode') {
                                     _data.remove_at = true;
                                     parent.left = null;
                                 }
-
                                 break;
                             } else {
-                                current = current.left
+                                current = current.left;
+                                _data.currentnode = current.left;
+                                _data.parentnode = current;
+
                             }
                         }
                         else {
+                            if (functionType == 'put') {
+
+                                var node = new Node(data, null, null);
+                                current.left = node;
+                            }
                             break;
                         }
                     }
@@ -108,19 +211,24 @@
                         //null인지 확인
                         if (current.right != null) {
                             //null 아니면 데이터 비교
+
                             if (current.right.data == data) {
                                 _data.contains = true;
-
-                                if (functionType == 'remove') {
+                                _data.currentnode = current.right;
+                                if (functionType == 'removeAllnode') {
                                     _data.remove_at = true;
                                     parent.right = null;
                                 }
-
                                 break;
                             } else {
-                                current = current.right
+                                current = current.right;
+                                _data.currentnode = current.right;
                             }
                         } else {
+                            if (functionType == 'put') {
+                                var node = new Node(data, null, null);
+                                current.right = node;
+                            }
                             break;
                         }
                     }
@@ -128,93 +236,97 @@
 
                 if (functionType == 'getParent') {
                     return _data.parent;
-                } else if (functionType == 'remove') {
+                } else if (functionType == 'removeAllnode') {
                     return _data.remove_at;
                 } else if (functionType == 'put') {
                     return _data.contains;
+                } else if (functionType == 'contains') {
+                    return _data.contains;
+                } else if (functionType == 'remove') {
+                    return _data;
                 }
-
-                console.log(_data.contains);
-
-
-                return _data.contains;
             },
-            getParent: function (data) {
-                return console.log('getParent : ' + fun.contains(data, 'getParent'));
-            },
-            remove: function (data) {
-                return fun.contains(data, 'remove') ? console.log(data + '를 삭제했네요.') : console.log('해당 데이터가없어용;;');
-            },
-            get: function () {
-                console.log(bt);
-                //if (bt.root != null) {
-                //    
-                //    fun.preOrder(bt.root);
-                //} else {
-                //    $("#node").append("<div>없음</div>");
-                //}
-            },
-            preOrder: function (node) {
-                if (node != null) {
-                    console.log(node.data + " ");
-                    this.preOrder(node.left);
-                    this.preOrder(node.right);
-                }
-            }
-
-
-
         }
         return {
             put: fun.put,
             contains: fun.contains,
             getParent: fun.getParent,
+            removeAllnode: fun.removeAllnode,
             remove: fun.remove,
             get: fun.get,
         }
-
-
     }
 
     var bst = new BinaryTree();
-    bst.put(10);
-    bst.put(12);
-    bst.put(3);
-    bst.put(2);
-    bst.put(8);
-    bst.put(9);
-    bst.put(4);
-    bst.put(5);
-    bst.put(6);
-    bst.put(7);
-    bst.put(9);
 
+    bst.put(23);
+    bst.put(45);
+    bst.put(15);
+    bst.put(37);
+    bst.put(3);
+    bst.put(99);
+    bst.put(21);
+    bst.put(40);
+    bst.put(44);
+    bst.put(1);
+    bst.put(65);
+    bst.put(96);
+    bst.put(98);
+    bst.put(200);
+    bst.put(150);
+    bst.put(160);
+    bst.put(220);
+    bst.put(210);
+    bst.put(205);
+    bst.put(215);
+
+
+    //[23, 15, 3, 1, 21, 45, 37, 40, 44, 99, 65]
+    //               23
+    //            /      \
+    //          15        45
+    //          / \    /      \
+    //         3  21  37         99
+    //        /        \      /     \ 
+    //       1         40   65         200
+    //                  \    \       /      \
+    //                   44   96    150      220
+    //                          \     \       /   \
+    //                           98    160  210   215
+    //                                      /
+    //                                     205
 
     //bst.put(23);
-    //bst.put(5);
-    //bst.put(45);
-    //bst.put(26);
+    //bst.put(7);
     //bst.put(12);
     //bst.put(99);
-    bst.contains(2929);
-    bst.getParent(12);
-    bst.remove(12);
+
+    //console.log('contains : ' + bst.contains(12));
+
+    //bst.getParent(12);
+    //bst.removeAllnode(12);
+
+    //bst.get();
+    //bst.remove(45);
+    //bst.get();
+    bst.remove(150);
     bst.get();
 
-
-
 </script>
+
 <body>
 
-     메소드 <br/>
-     - put(Object data)<br/>
-     - contains(Object data)<br/>
-     - getparentdata 부모 data 가져오기<br/>
-     - remove(Object data)<br/><br/>
-     * 선택사항<br/>
-     - 밑 노드 전체 날리기<br/>
-     - 밑 노드 알아서 정렬<br/>
-     구현방식 필수 - 연결자료구조 선택 - 배열도 하고 싶으면.ㅎㅎ<br/>
+    메소드
+    <br/> - put(Object data)
+    <br/> - contains(Object data)
+    <br/> - getparentdata 부모 data 가져오기
+    <br/> - remove(Object data)
+    <br/>
+    <br/> * 선택사항
+    <br/> - 밑 노드 전체 날리기
+    <br/> - 밑 노드 알아서 정렬
+    <br/> 구현방식 필수 - 연결자료구조 선택 - 배열도 하고 싶으면.ㅎㅎ
+    <br/>
 </body>
 
 
