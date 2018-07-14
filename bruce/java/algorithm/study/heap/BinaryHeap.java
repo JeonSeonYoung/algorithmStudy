@@ -28,6 +28,8 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
 
     @Override
     public void put(T value) {
+        if(isFull())
+            throw new ArrayIndexOutOfBoundsException("is full");
         // TODO : choose next index if binaryTree[parent(lastIndex)] is equal to value
         binaryTree[++lastIndex] = value;
         upHeap(value);
@@ -35,6 +37,8 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
 
     @Override
     public T pop() {
+        if(isEmpty())
+            throw new ArrayIndexOutOfBoundsException("is empty");
         T value = binaryTree[ROOT_INDEX];
         binaryTree[ROOT_INDEX] = binaryTree[lastIndex--];
         maxHeapify();
@@ -46,7 +50,6 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
         return lastIndex;
     }
 
-
     @Override
     public int level() {
         return level;
@@ -55,6 +58,14 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
     @Override
     public void print() {
         BTreePrinter.printNode(binaryTree, ROOT_INDEX, lastIndex);
+    }
+
+    private boolean isFull() {
+        return size() >= maxSize;
+    }
+
+    private boolean isEmpty() {
+        return size() == 0;
     }
 
     // https://ko.wikipedia.org/wiki/%ED%9E%99_(%EC%9E%90%EB%A3%8C_%EA%B5%AC%EC%A1%B0)
