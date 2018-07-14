@@ -28,7 +28,7 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
 
     @Override
     public void put(T value) {
-        if(isFull())
+        if (isFull())
             throw new ArrayIndexOutOfBoundsException("is full");
         // TODO : choose next index if binaryTree[parent(lastIndex)] is equal to value
         binaryTree[++lastIndex] = value;
@@ -37,7 +37,7 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
 
     @Override
     public T pop() {
-        if(isEmpty())
+        if (isEmpty())
             throw new ArrayIndexOutOfBoundsException("is empty");
         T value = binaryTree[ROOT_INDEX];
         binaryTree[ROOT_INDEX] = binaryTree[lastIndex--];
@@ -72,7 +72,7 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
     private void upHeap(T value) {
         T val = value;
         int foundIdx = lastIndex;
-        int parentIdx = getParent(foundIdx);
+        int parentIdx = parent(foundIdx);
         while (foundIdx > ROOT_INDEX &&
                 !val.equals(binaryTree[ROOT_INDEX]) &&
                 compare(binaryTree[parentIdx], binaryTree[foundIdx])
@@ -81,7 +81,7 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
             val = binaryTree[parentIdx];
 
             foundIdx = parentIdx;
-            parentIdx = getParent(foundIdx);
+            parentIdx = parent(foundIdx);
         }
     }
 
@@ -91,8 +91,8 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
 
     // https://en.wikipedia.org/wiki/Binary_heap
     private void maxHeapify(int index) {
-        int left = index * 2;
-        int right = index * 2 + 1;
+        int left = left(index);
+        int right = right(index);
         int largest = index;
         if (left <= lastIndex && compare(binaryTree[largest], binaryTree[left]))
             largest = left;
@@ -105,14 +105,22 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
         }
     }
 
+    private int parent(int index) {
+        return index / 2;
+    }
+
+    private int left(int index) {
+        return index * 2;
+    }
+
+    private int right(int index) {
+        return index * 2 + 1;
+    }
+
     private void swap(int left, int right) {
         T temp = binaryTree[left];
         binaryTree[left] = binaryTree[right];
         binaryTree[right] = temp;
-    }
-
-    private int getParent(int index) {
-        return index / 2;
     }
 
     private boolean compare(T lhs, T rhs) {
