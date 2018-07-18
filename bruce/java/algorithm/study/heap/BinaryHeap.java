@@ -88,7 +88,7 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
 
     @Override
     public void print() {
-        BTreePrinter.printNode(binaryTree, ROOT_INDEX, lastIndex);
+        BTreePrinter.printNode(binaryTree, ROOT_INDEX, lastIndex, counts);
     }
 
     private boolean isFull() {
@@ -205,6 +205,8 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
         minHeap.print();
         minHeap.put(2);
         minHeap.print();
+        minHeap.put(1);
+        minHeap.print();
 
         System.out.println(minHeap.pop());
         minHeap.print();
@@ -248,9 +250,11 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
 class Node<T extends Comparable<?>> {
     Node<T> left, right;
     T data;
+    int count;
 
-    public Node(T data) {
+    public Node(T data, int count) {
         this.data = data;
+        this.count = count;
     }
 
     public void setLeft(Node<T> left) {
@@ -265,14 +269,14 @@ class Node<T extends Comparable<?>> {
 // reference : https://stackoverflow.com/questions/4965335/how-to-print-binary-tree-diagram
 class BTreePrinter {
 
-    public static <T extends Comparable<?>> void printNode(T[] binaryTree, int rootIndex, int lastIndex) {
+    public static <T extends Comparable<?>> void printNode(T[] binaryTree, int rootIndex, int lastIndex, Map<T, Integer> counts) {
         if (lastIndex <= 0) return;
-        Node<T> root = new Node(binaryTree[rootIndex]);
+        Node<T> root = new Node(binaryTree[rootIndex], counts.getOrDefault(binaryTree[rootIndex], 0));
         Node<T>[] mapping = new Node[lastIndex + 1];
         mapping[rootIndex] = root;
         for (int i = rootIndex + 1; i <= lastIndex; i++) {
             T value = binaryTree[i];
-            mapping[i] = new Node<>(value);
+            mapping[i] = new Node<>(value, counts.getOrDefault(value, 0));
         }
 
         for (int i = lastIndex; i > rootIndex; i--) {
@@ -306,7 +310,7 @@ class BTreePrinter {
         List<Node<T>> newNodes = new ArrayList<Node<T>>();
         for (Node<T> node : nodes) {
             if (node != null) {
-                System.out.print(node.data);
+                System.out.print(node.data + "(" + node.count + ")");
                 newNodes.add(node.left);
                 newNodes.add(node.right);
             } else {
