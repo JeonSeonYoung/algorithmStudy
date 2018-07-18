@@ -3,6 +3,10 @@ package algorithm.study.heap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+
+import static algorithm.study.util.LapUtil.check;
 
 public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
 
@@ -181,6 +185,30 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
         minHeap.print();
         System.out.println(minHeap.pop());
         minHeap.print();
+
+
+        Heap<Integer> heap = new BinaryHeap<>(20, Type.MAX);
+        final int length = 300;
+
+        List<Integer> data = ThreadLocalRandom.current().ints(length, 0, length).boxed().collect(Collectors.toList());
+
+        List<Integer> result = new ArrayList<>();
+        data.forEach(heap::put);
+        data.forEach(x -> {
+            Integer val = heap.pop();
+            result.add(val);
+        });
+
+        System.out.println(data);
+        System.out.println(result);
+
+        Integer prev = result.get(0);
+        for(Integer i : result) {
+            if(prev < i)
+                throw new RuntimeException("wrong ordering " + prev + " " + i );
+            prev = i;
+        }
+
 
     }
 }
