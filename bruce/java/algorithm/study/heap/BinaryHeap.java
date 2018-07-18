@@ -1,12 +1,8 @@
 package algorithm.study.heap;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
-
-import static algorithm.study.util.LapUtil.check;
 
 public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
 
@@ -22,21 +18,44 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
     private int maxSize;
     private int lastIndex;
 
+    private Map<T, Integer> counts;
+
     public BinaryHeap(int level, Type type) {
         this.level = level;
         this.maxSize = (int) Math.pow((double) 2, (double) level);
         this.type = type;
         this.binaryTree = (T[]) new Comparable[maxSize];
-        lastIndex = ROOT_INDEX - 1;
+        this.lastIndex = ROOT_INDEX - 1;
+
+        this.counts = new HashMap<>();
     }
 
     @Override
     public void put(T value) {
         if (isFull())
             throw new ArrayIndexOutOfBoundsException("is full");
-        // TODO : choose next index if binaryTree[parent(lastIndex)] is equal to value
-        binaryTree[++lastIndex] = value;
-        upHeap(value);
+        if (!hasOneOrMore(value)) {
+            binaryTree[getNextIndex(value)] = value;
+            upHeap(value);
+        }
+        incrementCount(value);
+    }
+
+    private void incrementCount(T value) {
+        counts.put(value,
+                counts.getOrDefault(value, 0) + 1);
+    }
+
+    private boolean hasOneOrMore(T value) {
+        return counts.getOrDefault(value, 0) > 0;
+    }
+
+    private boolean hasTwoOrMore(T value) {
+        return counts.getOrDefault(value, 0) > 1;
+    }
+
+    private int getNextIndex(T value) {
+        return ++lastIndex;
     }
 
     @Override
@@ -44,9 +63,17 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
         if (isEmpty())
             throw new ArrayIndexOutOfBoundsException("is empty");
         T value = binaryTree[ROOT_INDEX];
-        binaryTree[ROOT_INDEX] = binaryTree[lastIndex--];
-        maxHeapify();
+        if (!hasTwoOrMore(value)) {
+            binaryTree[ROOT_INDEX] = binaryTree[lastIndex--];
+            maxHeapify();
+        }
+        decrementCount(value);
         return value;
+    }
+
+    private void decrementCount(T value) {
+        counts.put(value,
+                counts.getOrDefault(value, 0) - 1);
     }
 
     @Override
@@ -186,14 +213,16 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
         System.out.println(minHeap.pop());
         minHeap.print();
 
-
         Heap<Integer> heap = new BinaryHeap<>(20, Type.MAX);
-        final int length = 300;
+        final int length = 30_000;
 
         List<Integer> data = ThreadLocalRandom.current().ints(length, 0, length).boxed().collect(Collectors.toList());
+        //List<Integer> data = IntStream.range(0, length).boxed().collect(Collectors.toList());
 
         List<Integer> result = new ArrayList<>();
-        data.forEach(heap::put);
+        data.forEach(x -> {
+            heap.put(x);
+        });
         data.forEach(x -> {
             Integer val = heap.pop();
             result.add(val);
@@ -203,11 +232,14 @@ public class BinaryHeap<T extends Comparable<T>> implements Heap<T> {
         System.out.println(result);
 
         Integer prev = result.get(0);
-        for(Integer i : result) {
-            if(prev < i)
-                throw new RuntimeException("wrong ordering " + prev + " " + i );
+        for (Integer i : result) {
+            if (prev < i)
+                throw new RuntimeException("wrong ordering " + prev + " < " + i);
             prev = i;
         }
+
+        Collections.sort(data, Comparator.reverseOrder());
+        System.out.println(data.equals(result));
 
 
     }
@@ -234,6 +266,7 @@ class Node<T extends Comparable<?>> {
 class BTreePrinter {
 
     public static <T extends Comparable<?>> void printNode(T[] binaryTree, int rootIndex, int lastIndex) {
+        if (lastIndex <= 0) return;
         Node<T> root = new Node(binaryTree[rootIndex]);
         Node<T>[] mapping = new Node[lastIndex + 1];
         mapping[rootIndex] = root;
