@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script type="text/javascript">
+
+    // insertHeap
+    // removeHeap
+    // size (active node count)
+
+    // https://www.zerocho.com/category/Algorithm/post/582de223d4416a001860e763
+    // https://medium.com/@fiv3star/%EC%A0%95%EB%A0%AC%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-sorting-algorithm-%EC%A0%95%EB%A6%AC-8ca307269dc7
+    // https://gist.github.com/goesang/0fe543a5c9d4015b84f8
+
+    function BinaryHeap() {
+        this.EMPTY = 'EMPTY';
+        this.content = [this.EMPTY];
+    }
+
+    BinaryHeap.prototype = {
+        insert: function(data) {
+            console.log('insert ' + data);
+
+            if (this.content.length == 1) {
+                this.content.push(data);
+                this.arrange(data);
+                console.log(this.content);
+                return;
+            }
+
+            // switch EMPTY to data
+            if (this.content[this.content.length - 1] == this.EMPTY)
+                this.content[this.content.length - 1] = data;
+            else
+                this.content.push(data);
+
+            // check complete binary tree
+            if (this.content.length % 2 !== 0) {
+                this.content.push(this.EMPTY);
+            }
+
+            this.arrange(data);
+            console.log(this.content);
+        },
+
+        arrange: function(data) {
+
+            var parentPosition, dataPosition;
+            var parent;
+
+            // loop until find data position
+            while(true) {
+                parentPosition = this.getParentPosition(data);
+                dataPosition = this.getPosition(data);
+
+                if (parentPosition == 0)
+                    break;
+
+                // switch position if data is bigger than parent
+                parent = this.content[parentPosition];
+
+                if (data > parent) {
+                    this.swap(this.content,
+                              parentPosition,
+                              dataPosition);
+                    continue;
+                }
+                else {
+                    break;
+                }
+            }
+        },
+
+        swap: function(content, parentPosition, dataPosition) {
+          var tmp = content[parentPosition];
+          content[parentPosition] = content[dataPosition];
+          content[dataPosition] = tmp;
+        },
+
+        // pop max data
+        pop: function() {
+            var max = this.content[1];
+
+            // get last node to be root node.
+            if (this.content[this.content.length - 1] == this.EMPTY) {
+                this.content[1] = this.content[this.content.length - 2]
+                this.content.splice(-2, 2);
+            }
+            else {
+                this.content[1] = this.content[this.content.length - 1];
+                this.content[this.content.length - 1] = this.EMPTY;
+            }
+
+            // compare root node and child node.
+            if (this.content[2] > this.content[1]) {
+                this.swap(this.content, 1, 2);
+            }
+
+            else if (this.content[3] > this.content[1]) {
+                this.swap(this.content, 1, 3);
+            }
+
+            return max;
+        },
+
+        // active node count
+        nodeCount: function() {
+            return this.content.filter(data => {
+                return data !== this.EMPTY;
+            }).length;
+        },
+
+        getParentPosition: function(data) {
+            var position = this.getPosition(data);
+            return ((position == 1) ? 0 : Math.floor(position / 2));
+        },
+
+        getPosition: function(data) {
+            for (var i = 1; i < this.content.length; i++) {
+                if (this.content[i] == data)
+                    return i;
+            }
+        }
+    }
+
+    var heap = new BinaryHeap();
+    heap.insert(3);
+    heap.insert(2);
+    heap.insert(5);
+    heap.insert(6);
+    // heap.insert(1);
+    // heap.insert(7);
+
+    console.log('max:' + heap.pop());
+    // console.log('max:' + heap.pop());
+    console.log(heap.content);
+
+    console.log(heap.nodeCount());
+
+</script>
+<body>
+</body>
+</html>
