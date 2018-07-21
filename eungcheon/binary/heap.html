@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>study - heap</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+    //https://codetype.wordpress.com/2012/08/29/cracking-the-coding-interview-javascript-minmax-binary-heap/
+    var heap = function () {
+
+        var heapArray = [];
+
+
+        var fun = {
+            insert: function (data) {
+                //배열에 순차적으로 입력
+                heapArray.push(data);
+                //데이터비교
+                fun.bubbleUp(heapArray.length - 1, data);
+            },
+            bubbleUp: function (childIndex, childData) {
+                if (childIndex > 0) {
+                    //head노드가 아닐때
+                    const parentIndex = fun.getParentIndex(childIndex);
+                    const parentData = heapArray[parentIndex];
+
+                    //자식노드가 더 크면 변경 후 재귀
+                    if (fun.shouldSwap(childData, parentData)) {
+                        heapArray[parentIndex] = childData;
+                        heapArray[childIndex] = parentData;
+                        this.bubbleUp(parentIndex, childData);
+                    }
+                }
+            },
+            bubbleDown: function (parentIndex, parentData) {
+                //removeHead 후 힙의 마지막요소가 head로 삽입 
+                //head로 삽입 후 힙의 개수가 2개이상일 때 : level이 2이상
+                if (parentIndex < heapArray.length) {
+                    //비교할 데이터 
+                    //부모인덱스
+                    let targetIndex = parentIndex;
+                    let targetData = parentData;
+
+                    //자식노드의 index를 가져옴
+                    const leftChildIndex = fun.getLeftChild(parentIndex);
+                    const rightChildIndex = fun.getRightChild(parentIndex);
+
+                    //자식노드와 swap하는 함수생성
+                    const trySwap = (index, array, shouldSwap) => {
+                        //자식노드의 index < 힙의길이 
+                        if (index < array.length) {
+
+                            //data = 자식노드의 index의 데이터
+                            const data = array[index];
+
+                            //자식노드데이터 > 부모의데이터 ? 데이터 swap : 스쳐지나감
+                            if (shouldSwap(data, targetData)) {
+                                //데이터 변경이 일어나면 비교데이터를 다시 담아서 아래쪽에서 재귀호출을 함.
+                                targetIndex = index;
+                                targetData = data;
+                            }
+                        }
+                    };
+                    //왼쪽자식, 힙, shouldSwap(자식 > 부모) ? true : false
+                    trySwap(leftChildIndex, heapArray, fun.shouldSwap);
+                    //오른쪽자식, 힙, shouldSwap(자식 > 부모) ? true : false
+                    trySwap(rightChildIndex, heapArray, fun.shouldSwap);
+
+                    //trySwap에서 shouldSwap 이뤄졌을때 -> 자식데이터가 더 클때
+                    if (targetIndex !== parentIndex) {
+                        //부모와 자식데이터를 서로 바꿔줌
+                        heapArray[parentIndex] = targetData;
+                        heapArray[targetIndex] = parentData;
+                        this.bubbleDown(targetIndex, parentData);
+                    }
+                }
+            },
+            removeHead: function () {
+                //root값에 힙의 마지막값 입력
+                var headNode = heapArray[0];
+                var tailNode = heapArray.pop();
+                heapArray[0] = tailNode;
+
+                //head 값 삭제후 정렬실행
+                fun.bubbleDown(0, tailNode);
+
+                //
+                return headNode;
+            },
+
+            //힙의 시작점이 0임.
+            getParentIndex: function (childIndex) {
+                console.log('childIndex : ' + childIndex);
+                console.log('Math.floor((childIndex - 1) / 2) : ' + Math.floor((childIndex - 1) / 2));
+                return Math.floor((childIndex - 1) / 2);
+            },
+            getLeftChild: function (parentIndex) {
+                return (parentIndex * 2) + 1;
+            },
+
+            getRightChild: function (parentIndex) {
+                return (parentIndex * 2) + 2;
+            },
+            shouldSwap: function (childData, parentData) {
+                return childData > parentData;
+            },
+            size: function () {
+                console.log('heapArray.length : ' + heapArray.length);
+                return heapArray.length;
+            },
+            getdata: function () {
+                console.log(heapArray);
+            },
+            
+        }
+        return {
+            insert: fun.insert,
+            getdata: fun.getdata,
+            removeHead: fun.removeHead,
+            size: fun.size
+        }
+
+
+    }
+
+
+    var h = new heap();
+    h.insert(3);
+    h.insert(4);
+    h.insert(5);
+    h.insert(10);
+
+    h.removeHead();
+    h.size();
+    h.getdata();
+
+    //heap.prototype.add(4);
+    //heap.prototype.add(5);
+
+</script>
+
+<body>
+
+    힙의조건 1. 완전이진트리여야 함. 2. 부모, 자식관계가 확실해야 함. 3. 부모의 값은 항상 자식(들)의 값보다 크거나(Max heap 최대 힙), 작아야(Min heap 최소 힙)하는 규칙이 있다. 3. removeheap
+    = 최대값 - 마지막 노드값이 root로 올라옴 - 왼쪽 오른쪽은 알아서? - 테일-리커션 tail-recursion 부모 : i/2 왼쪽자식 : i*2 오른쪽자식 : (i*2)+1 insert remove ->
+    removeheap size -> 들어가있는 node의 개수 정렬공부도하렴
+</body>
+
+
+</html>
